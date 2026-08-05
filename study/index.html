@@ -1235,37 +1235,41 @@ input[type=checkbox]:disabled{opacity:.35}
 .todo-group.todo-v31{
   overflow:hidden;
   opacity:1;
+  margin-bottom:10px;
+  border-radius:16px;
 }
 .todo-group.todo-v31.completed{
   opacity:1;
+  border-color:#cfe0d2;
+  box-shadow:none;
 }
 .todo-v31 .todo-head{
   display:grid;
   grid-template-columns:minmax(0,1fr) auto;
-  gap:12px;
+  gap:10px;
   align-items:start;
-  padding:15px 16px 12px;
+  padding:11px 14px 9px;
 }
 .todo-v31 .todo-head h3{
   margin:0;
-  font-size:16px;
-  line-height:1.45;
+  font-size:15px;
+  line-height:1.4;
 }
 .todo-v31-meta{
   display:flex;
   flex-wrap:wrap;
-  gap:5px 12px;
-  margin-top:6px;
+  gap:3px 10px;
+  margin-top:4px;
   color:var(--muted);
-  font-size:11px;
-  line-height:1.45;
+  font-size:10px;
+  line-height:1.4;
 }
 .todo-v31-meta span{
   white-space:nowrap;
 }
 .todo-v31-status{
   align-self:center;
-  padding:6px 9px;
+  padding:4px 8px;
   border-radius:999px;
   background:#eef3f6;
   color:#6f8797;
@@ -1280,8 +1284,8 @@ input[type=checkbox]:disabled{opacity:.35}
 .todo-stage-legend{
   display:flex;
   flex-wrap:wrap;
-  gap:6px 12px;
-  padding:9px 16px;
+  gap:5px 10px;
+  padding:7px 14px;
   border-top:1px solid #eee9e4;
   background:#fbfaf8;
   color:#736c67;
@@ -1310,10 +1314,10 @@ input[type=checkbox]:disabled{opacity:.35}
 .todo-v31-row{
   display:grid;
   grid-template-columns:minmax(64px,auto) minmax(0,1fr);
-  gap:14px;
+  gap:12px;
   align-items:center;
-  min-height:52px;
-  padding:9px 16px;
+  min-height:44px;
+  padding:6px 14px;
   border-bottom:1px solid #eee9e4;
   background:#fff;
 }
@@ -1337,7 +1341,7 @@ input[type=checkbox]:disabled{opacity:.35}
 .todo-stage-checks{
   display:flex;
   justify-content:flex-end;
-  gap:10px;
+  gap:8px;
 }
 .todo-stage-check-label{
   display:grid;
@@ -1347,26 +1351,18 @@ input[type=checkbox]:disabled{opacity:.35}
   font-size:8px;
 }
 input.todo-stage-check{
-  width:28px;
-  height:28px;
+  width:26px;
+  height:26px;
   margin:0;
   border-radius:8px;
   cursor:pointer;
-}
-.todo-v31-foot{
-  padding:9px 16px 11px;
-  border-top:1px solid #eee9e4;
-  background:#fbfaf8;
-  color:var(--muted);
-  font-size:10px;
-  line-height:1.5;
 }
 @media(max-width:430px){
   .todo-v31 .todo-head{grid-template-columns:minmax(0,1fr)}
   .todo-v31-status{justify-self:start}
   .todo-v31-row{grid-template-columns:minmax(50px,auto) minmax(0,1fr);padding-inline:13px}
-  .todo-stage-checks{gap:8px}
-  input.todo-stage-check{width:27px;height:27px}
+  .todo-stage-checks{gap:7px}
+  input.todo-stage-check{width:26px;height:26px}
 }
 
 nav{
@@ -3241,11 +3237,10 @@ function renderTodoCardV31(todo,item){
           <span>終了予定日 ${esc(finish)}</span>
         </div>
       </div>
-      <div class="todo-v31-status">${complete?"今日の最低ライン完了":`あと${unfinished}項目`}</div>
+      <div class="todo-v31-status">${complete?"完了":`あと${unfinished}項目`}</div>
     </div>
     <div class="todo-stage-legend">${legend}</div>
     <div class="todo-v31-items">${rows}</div>
-    <div class="todo-v31-foot">チェックはそのまま進捗へ保存されます。新規日でも、できた段階まで自由にチェックできます。</div>
   </div>`;
 }
 
@@ -3300,7 +3295,8 @@ function renderTodayTodos(){
     return;
   }
 
-  host.innerHTML='<div class="today-todo-note">今日取り組む項目を、できた段階まで直接チェックできます。</div>'+todos.map(todo=>{
+  const displayTodos=[...todos].sort((a,b)=>Number(!!a.completed)-Number(!!b.completed));
+  host.innerHTML=displayTodos.map(todo=>{
     const item=materialMap.get(todo.materialId);
     if(!item)return "";
     if(todo.adjustment){
