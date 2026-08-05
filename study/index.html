@@ -441,6 +441,20 @@ input[type=checkbox]:disabled{opacity:.35}
 .calculation-status.early{background:#f4f8fb;border-color:#d2e1eb}
 .calculation-status.late{background:#fff6f3;border-color:#ebd6cf}
 .interval-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.interval-mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.interval-mode-button{
+  border:1px solid #cbc4bd;background:#fff;border-radius:12px;padding:10px 7px;color:var(--ink)
+}
+.interval-mode-button strong{display:block;font-size:12px}
+.interval-mode-button span{display:block;margin-top:3px;color:var(--muted);font-size:9px;line-height:1.35}
+.interval-mode-button.active{background:var(--accent2);border-color:var(--accent);color:#496f89}
+.interval-mode-pane{display:none}.interval-mode-pane.active{display:block}
+.interval-weekday-grid{display:grid;gap:7px;margin-bottom:12px}
+.interval-weekday-row{
+  display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:center
+}
+.interval-weekday-row label{margin:0;text-align:center;font-size:12px;font-weight:800;color:var(--muted)}
+.interval-weekday-row select{padding:9px 10px}
 .adjustment-row{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto;gap:8px;align-items:center}
 .adjustment-row input{text-align:center}
 .unit-inline{font-size:12px;color:var(--muted);white-space:nowrap}
@@ -448,10 +462,53 @@ input[type=checkbox]:disabled{opacity:.35}
 .daily-amount-row input{text-align:center;font-size:20px;font-weight:800}
 .register-actions{display:grid;grid-template-columns:1fr 1.35fr;gap:10px}
 .register-actions .primary{margin-top:0}
+.serial-number-settings{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(110px,.7fr);
+  gap:10px;
+  align-items:end;
+  margin-top:10px;
+}
+.serial-number-toggle{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  min-height:48px;
+  padding:10px 12px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:#faf9f7;
+  font-size:13px;
+  font-weight:700;
+}
+.serial-number-toggle input{width:20px;height:20px;margin:0}
+.material-data-management{
+  display:none;
+  margin-top:16px;
+  padding:15px;
+  border:1px solid #e5d7d0;
+  border-radius:16px;
+  background:#fffaf8;
+}
+.material-data-management.show{display:block}
+.material-data-management h3{margin:0 0 6px;font-size:14px}
+.material-data-management p{margin:0 0 12px;color:var(--muted);font-size:11px;line-height:1.55}
+.material-data-actions{display:grid;gap:8px}
+.material-data-button{
+  width:100%;
+  min-height:44px;
+  border:1px solid #d8c8c0;
+  border-radius:12px;
+  background:#fff;
+  color:#765f55;
+  font-weight:800;
+}
+.material-data-button.danger{border-color:#d9aaa2;background:#fff5f3;color:#a34f44}
 @media(max-width:430px){
   .subject-tone-row{grid-template-columns:1fr 112px}
   .week-allocation{gap:4px}
   .week-box input{font-size:13px}
+  .serial-number-settings{grid-template-columns:1fr}
 }
 
 
@@ -1103,6 +1160,17 @@ input[type=checkbox]:disabled{opacity:.35}
   color:var(--muted);
   line-height:1.6;
 }
+.todo-clear-line{
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px solid var(--line);
+}
+.todo-clear-line-note{
+  margin-top:6px;
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.55;
+}
 .progress-summary-grid.dynamic-count{
   grid-template-columns:repeat(2,minmax(0,1fr));
 }
@@ -1313,8 +1381,8 @@ input[type=checkbox]:disabled{opacity:.35}
 }
 .todo-v31-row{
   display:grid;
-  grid-template-columns:minmax(64px,auto) minmax(0,1fr);
-  gap:12px;
+  grid-template-columns:minmax(64px,1fr) auto auto;
+  gap:9px;
   align-items:center;
   min-height:44px;
   padding:6px 14px;
@@ -1338,10 +1406,44 @@ input[type=checkbox]:disabled{opacity:.35}
   color:var(--muted);
   font-size:9px;
 }
+.todo-v31-carryover{
+  display:inline-flex;
+  align-items:center;
+  margin-left:4px;
+  padding:2px 6px;
+  border-radius:999px;
+  background:#fff1dc;
+  color:#9a6b2c;
+  font-size:9px;
+  font-weight:800;
+  white-space:nowrap;
+}
 .todo-stage-checks{
   display:flex;
   justify-content:flex-end;
   gap:8px;
+}
+.todo-v31-tools{display:flex;gap:6px;justify-content:flex-end}
+.todo-v31-tool{
+  display:grid;place-items:center;width:28px;height:28px;padding:0;
+  border:1px solid #d5cec8;border-radius:8px;background:#fff;color:#81776f;
+  font-size:14px;font-weight:800;
+}
+.todo-v31-tool.review.active{border-color:#ddb875;background:#fff4df;color:#9a6b2c}
+.todo-v31-tool.memo.active{border-color:#a9cadc;background:#eef7fb;color:#547c98}
+.todo-v31-memo{
+  display:flex;align-items:flex-start;gap:6px;padding:7px 14px 8px;
+  border-bottom:1px solid #eee9e4;background:#fbfaf8;color:#6f675f;
+  font-size:10px;line-height:1.5;
+}
+.todo-v31-memo-editor{
+  display:none;grid-template-columns:minmax(0,1fr) auto;gap:8px;
+  padding:8px 14px;border-bottom:1px solid #eee9e4;background:#f7fafb;
+}
+.todo-v31-memo-editor.show{display:grid}
+.todo-v31-memo-editor input{min-width:0;padding:9px 10px;font-size:12px}
+.todo-v31-memo-editor button{
+  border:1px solid var(--accent);border-radius:10px;background:#fff;color:#547c98;padding:8px 11px;font-weight:800
 }
 .todo-stage-check-label{
   display:grid;
@@ -1360,9 +1462,10 @@ input.todo-stage-check{
 @media(max-width:430px){
   .todo-v31 .todo-head{grid-template-columns:minmax(0,1fr)}
   .todo-v31-status{justify-self:start}
-  .todo-v31-row{grid-template-columns:minmax(50px,auto) minmax(0,1fr);padding-inline:13px}
+  .todo-v31-row{grid-template-columns:minmax(46px,1fr) auto auto;padding-inline:13px;gap:7px}
   .todo-stage-checks{gap:7px}
   input.todo-stage-check{width:26px;height:26px}
+  .todo-v31-tool{width:26px;height:26px}
 }
 
 nav{
@@ -1474,11 +1577,15 @@ nav button.active{color:var(--accent);font-weight:700}
     <div class="field"><label>出版社</label><input id="materialPublisher" value="" placeholder="出版社名（任意）"></div>
     <div class="inline">
       <div class="field"><label>用紙サイズ</label><select id="paperSize"><option value="">選択してください</option><option>A4</option><option>B5</option><option>A5</option></select></div>
-      <div class="field"><label>管理単位</label><select id="materialUnit" onchange="recalculatePlan()"><option value="">選択してください</option><option value="問">問題</option><option value="ページ">ページ</option><option value="語">単語</option><option value="枚">枚</option></select></div>
+      <div class="field"><label>管理単位</label><input id="materialUnit" maxlength="20" value="" placeholder="例：問、ページ、プリント、Lesson" oninput="recalculatePlan()"></div>
     </div>
     <div class="inline">
       <div class="field"><label>総数</label><input id="materialTotal" type="number" min="1" value="" placeholder="例：364" oninput="syncRemainingAmount();recalculatePlan()"></div>
       <div class="field"><label>残り</label><input id="materialRemaining" type="number" min="0" value="" placeholder="途中登録にも対応" oninput="remainingWasAuto=false;recalculatePlan()"></div>
+    </div>
+    <div class="serial-number-settings">
+      <label class="serial-number-toggle"><input id="showSerialNumber" type="checkbox" onchange="syncSerialNumberUI()">通番を表示する</label>
+      <div class="field" id="startNumberField"><label>開始番号</label><input id="startNumber" type="number" min="1" value="1" disabled></div>
     </div>
     <div class="remaining-note">途中から登録する場合は、現在残っている問題数・ページ数・単語数などを入力してください。</div>
     <div class="date-fields" style="margin-top:14px">
@@ -1531,6 +1638,10 @@ nav button.active{color:var(--accent);font-weight:700}
     </div>
 
     <input id="checkType" type="hidden" value="3">
+    <div class="todo-clear-line">
+      <div class="field compact-field"><label for="todoClearStage">今日のクリアライン</label><select id="todoClearStage"></select></div>
+      <div class="todo-clear-line-note">各問題がこの段階に達すると今日の分は完了です。未達の問題は翌日のTODOに「積み残し」として表示されます。</div>
+    </div>
     <div class="progress-edit-note">問題別の進捗は「進捗ページ」で編集できます。</div>
   </div>
   <div class="form-card"><h3>計画方法</h3>
@@ -1558,14 +1669,31 @@ nav button.active{color:var(--accent);font-weight:700}
       <div class="small" id="weeklyTotal">入力合計：0／週</div><div class="calculation-status" id="weeklyResult"></div>
     </div>
     <div class="plan-pane" id="intervalPlanPane">
-      <div class="field"><label>1セットの内容</label><div class="interval-grid">
-        <div class="field"><label>新規</label><input id="newDays" type="number" min="1" value="" placeholder="日数" oninput="recalculateInterval(true)"></div>
-        <div class="field"><label>復習</label><input id="reviewDays" type="number" min="0" value="" placeholder="日数" oninput="recalculateInterval(true)"></div>
-      </div></div>
-      <div class="field"><label>調整日</label><div class="adjustment-row">
-        <input id="bufferEvery" type="number" min="1" value="" placeholder="セット" oninput="recalculateInterval(true)"><span class="unit-inline">セットごとに</span>
-        <input id="bufferDays" type="number" min="0" value="" placeholder="日" oninput="recalculateInterval(true)"><span class="unit-inline">日</span>
-      </div></div>
+      <div class="interval-mode-tabs">
+        <button type="button" class="interval-mode-button active" data-interval-mode="continuous" onclick="selectIntervalMode('continuous')"><strong>日数で組む</strong><span>曜日に関係なく繰り返す</span></button>
+        <button type="button" class="interval-mode-button" data-interval-mode="weekday" onclick="selectIntervalMode('weekday')"><strong>曜日で組む</strong><span>曜日ごとに内容を決める</span></button>
+      </div>
+      <div class="interval-mode-pane active" id="continuousIntervalSettings">
+        <div class="field"><label>1セットの内容</label><div class="interval-grid">
+          <div class="field"><label>新規</label><input id="newDays" type="number" min="1" value="" placeholder="日数" oninput="recalculateInterval(true)"></div>
+          <div class="field"><label>復習</label><input id="reviewDays" type="number" min="0" value="" placeholder="日数" oninput="recalculateInterval(true)"></div>
+        </div></div>
+        <div class="field"><label>調整日</label><div class="adjustment-row">
+          <input id="bufferEvery" type="number" min="1" value="" placeholder="セット" oninput="recalculateInterval(true)"><span class="unit-inline">セットごとに</span>
+          <input id="bufferDays" type="number" min="0" value="" placeholder="日" oninput="recalculateInterval(true)"><span class="unit-inline">日</span>
+        </div></div>
+      </div>
+      <div class="interval-mode-pane" id="weekdayIntervalSettings">
+        <div class="field"><label>曜日ごとの内容</label><div class="interval-weekday-grid">
+          <div class="interval-weekday-row"><label>月</label><select class="interval-weekday-role" data-day="1" onchange="recalculateInterval(true)"><option value="new">新規</option><option value="review">復習</option><option value="adjustment">調整</option><option value="off">休み</option></select></div>
+          <div class="interval-weekday-row"><label>火</label><select class="interval-weekday-role" data-day="2" onchange="recalculateInterval(true)"><option value="new">新規</option><option value="review">復習</option><option value="adjustment">調整</option><option value="off">休み</option></select></div>
+          <div class="interval-weekday-row"><label>水</label><select class="interval-weekday-role" data-day="3" onchange="recalculateInterval(true)"><option value="review">復習</option><option value="new">新規</option><option value="adjustment">調整</option><option value="off">休み</option></select></div>
+          <div class="interval-weekday-row"><label>木</label><select class="interval-weekday-role" data-day="4" onchange="recalculateInterval(true)"><option value="new">新規</option><option value="review">復習</option><option value="adjustment">調整</option><option value="off">休み</option></select></div>
+          <div class="interval-weekday-row"><label>金</label><select class="interval-weekday-role" data-day="5" onchange="recalculateInterval(true)"><option value="new">新規</option><option value="review">復習</option><option value="adjustment">調整</option><option value="off">休み</option></select></div>
+          <div class="interval-weekday-row"><label>土</label><select class="interval-weekday-role" data-day="6" onchange="recalculateInterval(true)"><option value="review">復習</option><option value="new">新規</option><option value="adjustment">調整</option><option value="off">休み</option></select></div>
+          <div class="interval-weekday-row"><label>日</label><select class="interval-weekday-role" data-day="0" onchange="recalculateInterval(true)"><option value="off">休み</option><option value="new">新規</option><option value="review">復習</option><option value="adjustment">調整</option></select></div>
+        </div></div>
+      </div>
       <div class="plan-summary"><div class="plan-summary-label">新規日の取り組み量</div><div class="daily-amount-row"><span>新規1日につき</span><input id="dailyNewAmount" type="number" min="1" value="" placeholder="量" oninput="recalculateInterval(false)"><span id="dailyUnit">取り組む</span></div></div>
       <div class="small">終了目標日を入力すると必要量を自動算出し、直接入力し直すこともできます。</div>
       <div class="calculation-status" id="intervalResult"></div>
@@ -1590,6 +1718,14 @@ nav button.active{color:var(--accent);font-weight:700}
 
   </div>
   <div class="register-actions"><button class="secondary-btn" type="button" onclick="clearRegistrationForm()">入力をクリア</button><button class="primary" id="registerSubmitButton" type="button" onclick="registerMaterial()">この内容で登録する</button></div>
+  <div class="material-data-management" id="materialDataManagement">
+    <h3>教材データ管理</h3>
+    <p>教材設定を残したまま進捗を初期化できます。教材の削除は設定・進捗・TODO履歴・保存画像をすべて削除します。</p>
+    <div class="material-data-actions">
+      <button class="material-data-button" type="button" onclick="resetEditingMaterialProgress()">進捗をリセット</button>
+      <button class="material-data-button danger" type="button" onclick="deleteEditingMaterial()">教材を削除</button>
+    </div>
+  </div>
 </section>
 
 <section class="screen" id="library">
@@ -1719,6 +1855,7 @@ function updatePreview(){
 
 let selectedStudyType="mastery";
 let selectedTodoPolicy="amount";
+let selectedIntervalMode="continuous";
 
 
 function selectTodoPolicy(policy){
@@ -1726,6 +1863,25 @@ function selectTodoPolicy(policy){
   document.querySelectorAll(".todo-policy-button").forEach(btn=>{
     btn.classList.toggle("active",btn.dataset.policy===selectedTodoPolicy);
   });
+}
+function intervalWeekdayRolesFromForm(){
+  const roles={};
+  document.querySelectorAll(".interval-weekday-role").forEach(select=>roles[select.dataset.day]=select.value||"off");
+  return roles;
+}
+function selectIntervalMode(mode){
+  selectedIntervalMode=mode==="weekday"?"weekday":"continuous";
+  document.querySelectorAll(".interval-mode-button").forEach(button=>button.classList.toggle("active",button.dataset.intervalMode===selectedIntervalMode));
+  document.getElementById("continuousIntervalSettings")?.classList.toggle("active",selectedIntervalMode==="continuous");
+  document.getElementById("weekdayIntervalSettings")?.classList.toggle("active",selectedIntervalMode==="weekday");
+  try{recalculateInterval(true)}catch(error){console.error(error)}
+}
+function resetIntervalMode(){
+  document.querySelectorAll(".interval-weekday-role").forEach(select=>{
+    const day=+select.dataset.day;
+    select.value=day===0?"off":(day===3||day===6?"review":"new");
+  });
+  selectIntervalMode("continuous");
 }
 function resetTodoPolicy(){
   selectTodoPolicy("amount");
@@ -1766,15 +1922,16 @@ function renderMasterySettings(labels=null){
   grid.innerHTML=values.map((label,i)=>`
     <label class="mastery-label-row">
       <span>${i+1}段目</span>
-      <input data-mastery-label="${i+1}" value="${esc(label)}">
+      <input data-mastery-label="${i+1}" value="${esc(label)}" oninput="renderTodoClearLineOptions()">
     </label>
   `).join("");
-
+  renderTodoClearLineOptions();
 }
 function renderCycleSummary(){
   const count=Math.max(2,Math.min(5,+document.getElementById("cycleCount")?.value||3));
   const host=document.getElementById("cycleSummary");
   if(host)host.textContent=`${Array.from({length:count},(_,i)=>`${i+1}周目`).join(" → ")}で完了`;
+  renderTodoClearLineOptions();
 }
 function syncStudyTypeUI(){
   document.querySelectorAll(".study-type-button").forEach(btn=>{
@@ -1788,6 +1945,7 @@ function syncStudyTypeUI(){
   const hidden=document.getElementById("checkType");
   if(hidden)hidden.value=String(getRegistrationCheckLabels().length);
   renderCycleSummary();
+  renderTodoClearLineOptions();
 }
 function getRegistrationCheckLabels(){
   if(selectedStudyType==="completion")return["完了"];
@@ -1797,6 +1955,26 @@ function getRegistrationCheckLabels(){
   }
   return currentMasteryLabels();
 }
+function renderTodoClearLineOptions(selected=null){
+  const select=document.getElementById("todoClearStage");
+  if(!select)return;
+  const labels=getRegistrationCheckLabels();
+  if(selectedStudyType==="cycle"){
+    select.innerHTML='<option value="0">その日に割り当てられた周回</option>';
+    select.value="0";
+    select.disabled=true;
+    return;
+  }
+  select.disabled=selectedStudyType==="completion";
+  const current=Math.max(1,Math.min(labels.length,+selected||+select.value||1));
+  select.innerHTML=labels.map((label,index)=>`<option value="${index+1}">${index+1}段目：${esc(label)}</option>`).join("");
+  select.value=String(current);
+}
+function materialTodoClearStageV32(item){
+  const maxStage=Math.max(1,progressStageLabels(item).length);
+  if(inferStudyType(item)==="cycle")return 0;
+  return Math.max(1,Math.min(maxStage,+item.todoClearStage||1));
+}
 function resetStudyTypeForm(){
   selectedStudyType="mastery";
   const stepCount=document.getElementById("masteryStepCount");
@@ -1805,6 +1983,7 @@ function resetStudyTypeForm(){
   if(cycle)cycle.value="3";
   renderMasterySettings(defaultMasteryLabels(3));
   syncStudyTypeUI();
+  renderTodoClearLineOptions(1);
 }
 function inferStudyType(item){
   if(item.studyType)return item.studyType;
@@ -1825,6 +2004,7 @@ function loadStudyTypeSettings(item){
     if(cycle)cycle.value=String(count);
   }
   syncStudyTypeUI();
+  renderTodoClearLineOptions(item.todoClearStage||1);
 }
 
 function renderTodo(){
@@ -1964,11 +2144,33 @@ function saveBookboxColor(){
 /* 教材登録 v0.18 */
 const SUBJECT_BASE_COLORS={"国語":"#F7C6D6","数学":"#B8DDF3","英語":"#D6C6EE","理科":"#C7E8D1","地理歴史":"#FFE0B6","公民":"#FFF1C4","保健体育":"#CDEEE8","芸術":"#B9D6C0","情報":"#C4CCF5","家庭":"#D6E0E5","探究":"#BFD0D8","未分類":"#DCD8D0","その他":"#E2E2E2"};
 const MATERIALS_KEY="mieruStudyMaterialsV1";
+const MATERIAL_PROGRESS_KEY_V32="mieruStudyProgressV32";
+const MATERIAL_PROGRESS_FIELDS_V32=["progress","remaining","completedAmount","completed","itemDetails","learningHistory","studyHistory","history"];
 let selectedSpineTone="basic",selectedPlanMode="daily",materialImageData="",motivationImageData="",remainingWasAuto=true;
-function loadMaterials(){try{return JSON.parse(localStorage.getItem(MATERIALS_KEY)||"[]")||[]}catch(e){return[]}}
+function loadMaterials(){
+  try{
+    const settings=JSON.parse(localStorage.getItem(MATERIALS_KEY)||"[]")||[];
+    const progressById=JSON.parse(localStorage.getItem(MATERIAL_PROGRESS_KEY_V32)||"{}")||{};
+    return settings.map(item=>progressById[item.id]?{...item,...progressById[item.id]}:item);
+  }catch(e){return[]}
+}
 function saveMaterials(v){
   try{
-    localStorage.setItem(MATERIALS_KEY,JSON.stringify(v));
+    const progressById={};
+    const settings=v.map(item=>{
+      const setting={...item};
+      const progress={};
+      MATERIAL_PROGRESS_FIELDS_V32.forEach(field=>{
+        if(Object.prototype.hasOwnProperty.call(setting,field)){
+          progress[field]=setting[field];
+          delete setting[field];
+        }
+      });
+      progressById[item.id]=progress;
+      return setting;
+    });
+    localStorage.setItem(MATERIAL_PROGRESS_KEY_V32,JSON.stringify(progressById));
+    localStorage.setItem(MATERIALS_KEY,JSON.stringify(settings));
     return true;
   }catch(err){
     console.error(err);
@@ -2096,10 +2298,57 @@ function recalculateDaily(auto=true){const u=currentUnit(),i=document.getElement
 function weeklyFinishDate(total,start,a){if(!start||total<=0||a.reduce((x,y)=>x+y,0)<=0)return null;let done=0,d=new Date(start),g=0;while(done<total&&g<20000){done+=a[d.getDay()]||0;if(done>=total)return d;d=addDays(d,1);g++}return null}
 function recalculateWeekly(){const t=remainingTotal(),u=currentUnit(),s=parseLocalDate(document.getElementById("startDate").value),g=parseLocalDate(document.getElementById("targetDate").value);let req=0;if(s&&g&&g>=s&&t>0)req=Math.ceil(t/Math.max(1,(daysBetween(s,g)+1)/7));document.getElementById("weeklyRequired").textContent=req?`週あたり ${req}${u}`:"終了目標日を入力すると表示します";const a=Array(7).fill(0);document.querySelectorAll(".weekday-amount").forEach(i=>a[+i.dataset.day]=Math.max(0,+i.value||0));const sum=a.reduce((x,y)=>x+y,0);document.getElementById("weeklyTotal").textContent=`入力合計：${sum}${u}／週${req?`（必要量 ${req}${u}）`:""}`;setResult(document.getElementById("weeklyResult"),weeklyFinishDate(t,s,a),sum?`現在の週合計は${sum}${u}です。`:"曜日ごとの量を入力してください。")}
 function intervalFinishDate(total,start,nd,rd,be,bd,daily){if(!start||total<=0||nd<=0||daily<=0)return null;let done=0,d=new Date(start),sets=0,g=0;while(done<total&&g<20000){for(let i=0;i<nd&&done<total;i++){done+=daily;if(done>=total)return d;d=addDays(d,1);g++}d=addDays(d,rd);g+=rd;sets++;if(be>0&&bd>0&&sets%be===0){d=addDays(d,bd);g+=bd}}return null}
-function requiredInterval(){const t=remainingTotal(),s=parseLocalDate(document.getElementById("startDate").value),g=parseLocalDate(document.getElementById("targetDate").value),nd=+document.getElementById("newDays").value||0,rd=+document.getElementById("reviewDays").value||0,be=+document.getElementById("bufferEvery").value||0,bd=+document.getElementById("bufferDays").value||0;if(!s||!g||g<s||t<=0||nd<=0)return"";for(let a=1;a<=t;a++){const f=intervalFinishDate(t,s,nd,rd,be,bd,a);if(f&&f<=g)return a}return t}
-function recalculateInterval(auto=false){const t=remainingTotal(),s=parseLocalDate(document.getElementById("startDate").value),nd=+document.getElementById("newDays").value||0,rd=+document.getElementById("reviewDays").value||0,be=+document.getElementById("bufferEvery").value||0,bd=+document.getElementById("bufferDays").value||0,i=document.getElementById("dailyNewAmount"),u=currentUnit();if(auto&&i.value===""){const r=requiredInterval();if(r)i.value=r}document.getElementById("dailyUnit").textContent=`${u}取り組む`;setResult(document.getElementById("intervalResult"),intervalFinishDate(t,s,nd,rd,be,bd,+i.value||0),nd&&i.value?`${nd}日新規 → ${rd}日復習、${be||0}セットごとに調整日${bd||0}日。`:"サイクルと新規日の量を入力してください。")}
+function weekdayIntervalFinishDate(total,start,roles,daily){
+  if(!start||total<=0||daily<=0||!Object.values(roles||{}).includes("new"))return null;
+  let done=0,date=new Date(start),guard=0;
+  while(done<total&&guard<20000){
+    if(roles[date.getDay()]==="new")done+=daily;
+    if(done>=total)return date;
+    date=addDays(date,1);guard++;
+  }
+  return null;
+}
+function intervalFinishDateFromForm(total,start,daily){
+  if(selectedIntervalMode==="weekday")return weekdayIntervalFinishDate(total,start,intervalWeekdayRolesFromForm(),daily);
+  return intervalFinishDate(total,start,+document.getElementById("newDays").value||0,+document.getElementById("reviewDays").value||0,+document.getElementById("bufferEvery").value||0,+document.getElementById("bufferDays").value||0,daily);
+}
+function requiredInterval(){
+  const total=remainingTotal(),start=parseLocalDate(document.getElementById("startDate").value),goal=parseLocalDate(document.getElementById("targetDate").value);
+  if(!start||!goal||goal<start||total<=0)return"";
+  for(let amount=1;amount<=total;amount++){
+    const finish=intervalFinishDateFromForm(total,start,amount);
+    if(finish&&finish<=goal)return amount;
+  }
+  return total;
+}
+function recalculateInterval(auto=false){
+  const total=remainingTotal(),start=parseLocalDate(document.getElementById("startDate").value),input=document.getElementById("dailyNewAmount"),unit=currentUnit();
+  if(auto&&input.value===""){
+    const required=requiredInterval();
+    if(required)input.value=required;
+  }
+  document.getElementById("dailyUnit").textContent=`${unit}取り組む`;
+  const amount=+input.value||0;
+  const finish=intervalFinishDateFromForm(total,start,amount);
+  let detail="";
+  if(selectedIntervalMode==="weekday"){
+    const roles=intervalWeekdayRolesFromForm();
+    const names={new:"新規",review:"復習",adjustment:"調整",off:"休み"};
+    const days=["日","月","火","水","木","金","土"];
+    detail=amount?days.map((day,index)=>`${day}:${names[roles[index]]||"休み"}`).join("／"):"曜日の内容と新規日の量を入力してください。";
+  }else{
+    const newDays=+document.getElementById("newDays").value||0,reviewDays=+document.getElementById("reviewDays").value||0,bufferEvery=+document.getElementById("bufferEvery").value||0,bufferDays=+document.getElementById("bufferDays").value||0;
+    detail=newDays&&amount?`${newDays}日新規 → ${reviewDays}日復習、${bufferEvery||0}セットごとに調整日${bufferDays||0}日。`:"サイクルと新規日の量を入力してください。";
+  }
+  setResult(document.getElementById("intervalResult"),finish,detail);
+}
 function recalculatePlan(){recalculateDaily(true);recalculateWeekly();recalculateInterval(true)}
-function clearRegistrationForm(){exitEditMode();["materialSubject","materialTitle","materialPublisher","paperSize","materialUnit","materialTotal","materialRemaining","targetDate","dailyAmount","newDays","reviewDays","bufferEvery","bufferDays","dailyNewAmount"].forEach(id=>document.getElementById(id).value="");document.getElementById("startDate").value=todayISO();document.querySelectorAll(".weekday-amount").forEach(x=>x.value="");selectedSpineTone="basic";selectedPlanMode="daily";document.querySelectorAll(".tone-button").forEach(x=>x.classList.toggle("active",x.dataset.tone==="basic"));document.querySelectorAll(".plan-tab").forEach(x=>x.classList.toggle("active",x.dataset.plan==="daily"));["daily","weekly","interval"].forEach(m=>document.getElementById(m+"PlanPane").classList.toggle("active",m==="daily"));materialImageData="";motivationImageData="";
+function syncSerialNumberUI(){
+  const enabled=!!document.getElementById("showSerialNumber")?.checked;
+  const input=document.getElementById("startNumber");
+  if(input){input.disabled=!enabled;if(enabled&&(+input.value||0)<1)input.value="1"}
+}
+function clearRegistrationForm(){exitEditMode();["materialSubject","materialTitle","materialPublisher","paperSize","materialUnit","materialTotal","materialRemaining","targetDate","dailyAmount","newDays","reviewDays","bufferEvery","bufferDays","dailyNewAmount"].forEach(id=>document.getElementById(id).value="");document.getElementById("startDate").value=todayISO();document.querySelectorAll(".weekday-amount").forEach(x=>x.value="");document.getElementById("showSerialNumber").checked=false;document.getElementById("startNumber").value="1";syncSerialNumberUI();selectedSpineTone="basic";selectedPlanMode="daily";document.querySelectorAll(".tone-button").forEach(x=>x.classList.toggle("active",x.dataset.tone==="basic"));document.querySelectorAll(".plan-tab").forEach(x=>x.classList.toggle("active",x.dataset.plan==="daily"));["daily","weekly","interval"].forEach(m=>document.getElementById(m+"PlanPane").classList.toggle("active",m==="daily"));materialImageData="";motivationImageData="";
 const i=document.getElementById("materialImage");i.src="";i.style.display="none";
 document.getElementById("materialImagePlaceholder").style.display="block";
 document.getElementById("materialImageInput").value="";
@@ -2109,6 +2358,7 @@ document.getElementById("motivationImageInput").value="";
 const openOrder=document.getElementById("registrationOpenOrder");if(openOrder)openOrder.value="row";
 resetStudyTypeForm();
 resetTodoPolicy();
+resetIntervalMode();
 remainingWasAuto=true;updateSpinePreview();recalculatePlan()}
 function sizeClass(s){return s==="A4"?"size-a4":s==="A5"?"size-a5":"size-b5"}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
@@ -2181,6 +2431,29 @@ function compressNumberRanges(indices){
   }
   return parts.join("、");
 }
+function materialDisplayNumberV32(item,index){
+  const start=item?.showSerialNumber?Math.max(1,+item.startNumber||1):1;
+  return start+index;
+}
+function compressNumberRangesForMaterialV32(indices,item){
+  if(!indices.length)return "";
+  const values=[...new Set(indices.map(Number).filter(Number.isInteger))]
+    .sort((a,b)=>a-b)
+    .map(index=>materialDisplayNumberV32(item,index));
+  const parts=[];
+  let start=values[0],previous=values[0];
+  for(let i=1;i<=values.length;i++){
+    const current=values[i];
+    if(current===previous+1){previous=current;continue}
+    parts.push(start===previous?String(start):`${start}〜${previous}`);
+    start=current;previous=current;
+  }
+  return parts.join("、");
+}
+function todoRangeSummaryV32(todo,item){
+  const range=todo.rangeText||compressNumberRangesForMaterialV32(todo.indices||[],item);
+  return item?.showSerialNumber?`${item.unit} ${range}`:`${range}${item?.unit||todo.unit||""}`;
+}
 function dateIsBefore(a,b){
   return a&&b&&a.getTime()<b.getTime();
 }
@@ -2199,13 +2472,16 @@ function weeklyScheduledDaysUntil(item,start,end){
 }
 function intervalPhaseForDate(item,date){
   const plan=item.plan||{};
+  const start=parseLocalDate(item.startDate);
+  if(!start||date<start)return {type:"before",day:0};
+  if(plan.intervalMode==="weekday"){
+    const role=plan.intervalWeekdays?.[date.getDay()]||"off";
+    return {type:["new","review","adjustment"].includes(role)?role:"none",day:1};
+  }
   const newDays=Math.max(1,+plan.newDays||1);
   const reviewDays=Math.max(0,+plan.reviewDays||0);
   const bufferEvery=Math.max(0,+plan.bufferEvery||0);
   const bufferDays=Math.max(0,+plan.bufferDays||0);
-  const start=parseLocalDate(item.startDate);
-  if(!start||date<start)return {type:"before",day:0};
-
   let cursor=new Date(start),setCount=0,guard=0;
   while(guard<10000){
     for(let i=0;i<newDays;i++){
@@ -2247,9 +2523,16 @@ function deadlineAmountForToday(item,baseAmount,today,eligibleCount){
   let remainingDays=daysInclusive(today,target);
   if(item.planMode==="weekly"){
     remainingDays=weeklyScheduledDaysUntil(item,today,target);
+  }else if(item.planMode==="interval"){
+    remainingDays=0;
+    const todayPhase=intervalPhaseForDate(item,today).type;
+    for(let cursor=new Date(today),guard=0;cursor<=target&&guard<20000;cursor=addDays(cursor,1),guard++){
+      const phase=intervalPhaseForDate(item,cursor).type;
+      if(phase===todayPhase)remainingDays++;
+    }
   }
   if(remainingDays<=0)return baseAmount;
-  return Math.max(baseAmount,Math.ceil(eligibleCount/remainingDays));
+  return Math.max(1,Math.ceil(eligibleCount/remainingDays));
 }
 function targetStageForTask(item,progress,phase){
   const labels=progressStageLabels(item);
@@ -2429,12 +2712,57 @@ function renderTodayTodos(){
     }).join("");
 }
 
-function collectPlan(){if(selectedPlanMode==="daily")return{dailyAmount:+document.getElementById("dailyAmount").value||0};if(selectedPlanMode==="weekly"){const w={};document.querySelectorAll(".weekday-amount").forEach(x=>w[x.dataset.day]=+x.value||0);return{weekdays:w}}return{newDays:+document.getElementById("newDays").value||0,reviewDays:+document.getElementById("reviewDays").value||0,bufferEvery:+document.getElementById("bufferEvery").value||0,bufferDays:+document.getElementById("bufferDays").value||0,dailyNewAmount:+document.getElementById("dailyNewAmount").value||0}}
+function collectPlan(){
+  if(selectedPlanMode==="daily")return{dailyAmount:+document.getElementById("dailyAmount").value||0};
+  if(selectedPlanMode==="weekly"){
+    const weekdays={};
+    document.querySelectorAll(".weekday-amount").forEach(input=>weekdays[input.dataset.day]=+input.value||0);
+    return{weekdays};
+  }
+  return{
+    intervalMode:selectedIntervalMode,
+    newDays:+document.getElementById("newDays").value||0,
+    reviewDays:+document.getElementById("reviewDays").value||0,
+    bufferEvery:+document.getElementById("bufferEvery").value||0,
+    bufferDays:+document.getElementById("bufferDays").value||0,
+    intervalWeekdays:intervalWeekdayRolesFromForm(),
+    dailyNewAmount:+document.getElementById("dailyNewAmount").value||0
+  };
+}
+function materialDataWouldBeTruncatedV32(item,newTotal){
+  const total=Math.max(0,+newTotal||0);
+  if(materialProgressV31(item).slice(total).some(stage=>(+stage||0)>0))return true;
+  if(item.itemDetails&&typeof item.itemDetails==="object"&&Object.keys(item.itemDetails).some(key=>Number.isInteger(+key)&&+key>=total))return true;
+  return loadSharedTodos().some(todo=>todo.materialId===item.id&&Array.isArray(todo.indices)&&todo.indices.some(index=>(+index||0)>=total));
+}
+function pruneMaterialTodosV32(materialId,total,item){
+  const limit=Math.max(0,+total||0);
+  const todos=loadSharedTodos().map(todo=>{
+    if(todo.materialId!==materialId||!Array.isArray(todo.indices))return todo;
+    const required=Array.isArray(todo.requiredStages)?todo.requiredStages:[];
+    const pairs=todo.indices.map((rawIndex,position)=>({index:+rawIndex,stage:required[position]}))
+      .filter(entry=>Number.isInteger(entry.index)&&entry.index>=0&&entry.index<limit);
+    const indices=pairs.map(entry=>entry.index);
+    return {
+      ...todo,
+      indices,
+      requiredStages:pairs.map(entry=>Math.max(1,+entry.stage||1)),
+      reviewIndices:Array.isArray(todo.reviewIndices)
+        ?todo.reviewIndices.map(Number).filter(index=>Number.isInteger(index)&&index>=0&&index<limit)
+        :[],
+      carryoverIndices:Array.isArray(todo.carryoverIndices)
+        ?todo.carryoverIndices.map(Number).filter(index=>Number.isInteger(index)&&index>=0&&index<limit)
+        :[],
+      rangeText:compressNumberRangesForMaterialV32(indices,item)
+    };
+  }).filter(todo=>todo.materialId!==materialId||todo.adjustment||!Array.isArray(todo.indices)||todo.indices.length>0);
+  return saveSharedTodos(todos);
+}
 function registerMaterial(){
   const subject=document.getElementById("materialSubject").value;
   const title=document.getElementById("materialTitle").value.trim();
   const paperSize=document.getElementById("paperSize").value;
-  const unit=document.getElementById("materialUnit").value;
+  const unit=document.getElementById("materialUnit").value.trim();
   const total=+document.getElementById("materialTotal").value||0;
   const remaining=remainingTotal();
   const startDate=document.getElementById("startDate").value;
@@ -2442,20 +2770,30 @@ function registerMaterial(){
   if(!subject)return toast("教科を選択してください");
   if(!title)return toast("教材名を入力してください");
   if(!paperSize)return toast("用紙サイズを選択してください");
-  if(!unit)return toast("管理単位を選択してください");
+  if(!unit)return toast("管理単位を入力してください");
   if(total<=0)return toast("総数を入力してください");
   if(!startDate)return toast("取り組み開始日を入力してください");
 
   const items=loadMaterials();
   const existingIndex=editingMaterialId?items.findIndex(x=>x.id===editingMaterialId):-1;
   const existing=existingIndex>=0?items[existingIndex]:null;
+  const oldTotal=Math.max(0,+existing?.total||0);
+  const totalReduced=!!existing&&total<oldTotal;
+  if(totalReduced&&materialDataWouldBeTruncatedV32(existing,total)){
+    const firstRemoved=materialDisplayNumberV32({...existing,showSerialNumber:document.getElementById("showSerialNumber").checked,startNumber:+document.getElementById("startNumber").value||1},total);
+    const lastRemoved=materialDisplayNumberV32({...existing,showSerialNumber:document.getElementById("showSerialNumber").checked,startNumber:+document.getElementById("startNumber").value||1},oldTotal-1);
+    if(!confirm(`総数を${oldTotal}から${total}に変更すると、${firstRemoved}〜${lastRemoved}の進捗・TODO・メモ記録が対象外になります。変更しますか？`))return;
+  }
 
   const item={
+    ...(existing||{}),
     id:existing?existing.id:"m"+Date.now(),
     subject,title,
     publisher:document.getElementById("materialPublisher").value.trim(),
     paperSize,unit,total,remaining,
     completedAmount:total-remaining,
+    showSerialNumber:!!document.getElementById("showSerialNumber").checked,
+    startNumber:Math.max(1,+document.getElementById("startNumber").value||1),
     startDate,
     targetDate:document.getElementById("targetDate").value,
     tone:selectedSpineTone,
@@ -2464,6 +2802,7 @@ function registerMaterial(){
     progressOpenOrder:document.getElementById("registrationOpenOrder")?.value||existing?.progressOpenOrder||"row",
     studyType:selectedStudyType,
     checkLabels:getRegistrationCheckLabels(),
+    todoClearStage:selectedStudyType==="cycle"?0:Math.max(1,+document.getElementById("todoClearStage").value||1),
     todoPolicy:selectedTodoPolicy,
     cycleCount:selectedStudyType==="cycle"?getRegistrationCheckLabels().length:null,
     checkType:getRegistrationCheckLabels().length,
@@ -2473,6 +2812,17 @@ function registerMaterial(){
     createdAt:existing?.createdAt||new Date().toISOString(),
     updatedAt:new Date().toISOString()
   };
+
+  if(existing&&Array.isArray(existing.progress)){
+    const maxStage=Math.max(1,progressStageLabels(item).length);
+    item.progress=existing.progress.slice(0,total).map(stage=>Math.max(0,Math.min(maxStage,+stage||0)));
+    while(item.progress.length<total)item.progress.push(0);
+    item.remaining=remainingFromProgressV31(item,item.progress);
+    item.completedAmount=Math.max(0,total-item.remaining);
+  }
+  if(item.itemDetails&&typeof item.itemDetails==="object"){
+    item.itemDetails=Object.fromEntries(Object.entries(item.itemDetails).filter(([key])=>Number.isInteger(+key)&&+key>=0&&+key<total));
+  }
 
   if(existingIndex>=0)items[existingIndex]=item;
   else items.push(item);
@@ -2495,6 +2845,9 @@ function registerMaterial(){
   if(!savedOk){
     toast("保存できませんでした。ブラウザの保存領域を確認してください");
     return;
+  }
+  if(totalReduced&&!pruneMaterialTodosV32(item.id,total,item)){
+    toast("教材は保存しましたが、過去のTODO範囲を更新できませんでした");
   }
 
   const wasEditing=!!editingMaterialId;
@@ -2588,6 +2941,9 @@ function startEditMaterial(id){
   document.getElementById("materialUnit").value=item.unit||"";
   document.getElementById("materialTotal").value=item.total||"";
   document.getElementById("materialRemaining").value=item.remaining??"";
+  document.getElementById("showSerialNumber").checked=item.showSerialNumber===true;
+  document.getElementById("startNumber").value=Math.max(1,+item.startNumber||1);
+  syncSerialNumberUI();
   document.getElementById("startDate").value=item.startDate||todayISO();
   document.getElementById("targetDate").value=item.targetDate||"";
   loadStudyTypeSettings(item);
@@ -2613,6 +2969,11 @@ function startEditMaterial(id){
   document.getElementById("bufferEvery").value=plan.bufferEvery||"";
   document.getElementById("bufferDays").value=plan.bufferDays??"";
   document.getElementById("dailyNewAmount").value=plan.dailyNewAmount||"";
+  document.querySelectorAll(".interval-weekday-role").forEach(select=>{
+    const defaults=+select.dataset.day===0?"off":(+select.dataset.day===3||+select.dataset.day===6?"review":"new");
+    select.value=plan.intervalWeekdays?.[select.dataset.day]||defaults;
+  });
+  selectIntervalMode(plan.intervalMode||"continuous");
 
   materialImageData=item.image||"";
   const img=document.getElementById("materialImage");
@@ -2635,6 +2996,7 @@ function startEditMaterial(id){
   }
 
   remainingWasAuto=false;
+  document.getElementById("materialDataManagement")?.classList.add("show");
   updateSpinePreview();
   updatePreview();
   recalculatePlan();
@@ -2645,10 +3007,55 @@ function exitEditMode(){
   const sub=document.getElementById("registerScreenSub");
   const banner=document.getElementById("editModeBanner");
   const btn=document.getElementById("registerSubmitButton");
+  const management=document.getElementById("materialDataManagement");
   if(title)title.textContent="教材登録";
   if(sub)sub.textContent="実際の教材を登録";
   if(banner)banner.classList.remove("show");
   if(btn)btn.textContent="この内容で登録する";
+  if(management)management.classList.remove("show");
+}
+function resetEditingMaterialProgress(){
+  if(!editingMaterialId){toast("編集する教材を選択してください");return}
+  const items=loadMaterials();
+  const index=items.findIndex(item=>item.id===editingMaterialId);
+  if(index<0){toast("教材が見つかりません");return}
+  const item=items[index];
+  if(!confirm("この教材の進捗・学習履歴・TODO達成状況・復習指定・メモをすべてリセットします。教材の登録情報は残ります。"))return;
+  item.progress=Array(Math.max(0,+item.total||0)).fill(0);
+  item.remaining=Math.max(0,+item.total||0);
+  item.completedAmount=0;
+  item.completed=false;
+  item.learningHistory=[];
+  item.studyHistory=[];
+  item.history=[];
+  item.itemDetails={};
+  item.updatedAt=new Date().toISOString();
+  items[index]=item;
+  if(!saveMaterials(items)){toast("進捗をリセットできませんでした");return}
+  saveSharedTodos(loadSharedTodos().filter(todo=>todo.materialId!==item.id));
+  if(currentProgressMaterialId===item.id)workingProgress=item.progress.slice();
+  document.getElementById("materialRemaining").value=item.remaining;
+  renderRegisteredMaterials();
+  renderMaterialEditList();
+  toast(`「${item.title}」の進捗をリセットしました`);
+}
+function deleteEditingMaterial(){
+  if(!editingMaterialId){toast("編集する教材を選択してください");return}
+  const items=loadMaterials();
+  const item=items.find(entry=>entry.id===editingMaterialId);
+  if(!item){toast("教材が見つかりません");return}
+  if(!confirm(`「${item.title}」を削除します。削除した教材と進捗は元に戻せません。`))return;
+  if(!saveMaterials(items.filter(entry=>entry.id!==item.id))){toast("教材を削除できませんでした");return}
+  saveSharedTodos(loadSharedTodos().filter(todo=>todo.materialId!==item.id));
+  if(currentProgressMaterialId===item.id){
+    currentProgressMaterialId=null;
+    workingProgress=[];
+  }
+  clearRegistrationForm();
+  renderRegisteredMaterials();
+  renderMaterialEditList();
+  go("home");
+  toast(`「${item.title}」を削除しました`);
 }
 
 
@@ -2756,6 +3163,9 @@ function estimateFinishDateForProgress(item){
   }
 
   if(item.planMode==="interval"){
+    if(plan.intervalMode==="weekday"){
+      return weekdayIntervalFinishDate(remaining,base,plan.intervalWeekdays||{},Math.max(0,+plan.dailyNewAmount||0));
+    }
     return intervalFinishDate(
       remaining,
       base,
@@ -2986,12 +3396,18 @@ function saveProgressChanges(){
   if(index<0){toast("教材が見つかりません");return}
   const item=items[index];
   item.progress=workingProgress.slice();
-  const clearStage=progressClearStage(item);
-  item.remaining=workingProgress.filter(v=>(+v||0)<clearStage).length;
+  const todayReviewTodo=loadSharedTodos().find(todo=>todo.date===localDateKey()&&todo.materialId===item.id&&todo.phase==="review");
+  (todayReviewTodo?.reviewIndices||[]).forEach(itemIndex=>{
+    const position=todayReviewTodo.indices?.indexOf(itemIndex)??-1;
+    const required=position>=0?requiredStageForSavedTodoV32(todayReviewTodo,position,item):1;
+    if((workingProgress[itemIndex]||0)>=required)setItemDetailV32(item,itemIndex,{reviewRequested:false});
+  });
+  item.remaining=remainingFromProgressV31(item,workingProgress);
   item.completedAmount=item.total-item.remaining;
   item.updatedAt=new Date().toISOString();
   items[index]=item;
   if(!saveMaterials(items)){toast("進捗を保存できませんでした");return}
+  syncStoredTodoCompletionV32(item.id,workingProgress);
   renderRegisteredMaterials();
   renderMaterialEditList();
   renderProgressPage();
@@ -3016,6 +3432,67 @@ function normalizeProgress(item){
   return materialProgressV31(item);
 }
 
+function itemDetailsV32(item){
+  return item?.itemDetails&&typeof item.itemDetails==="object"&&!Array.isArray(item.itemDetails)?item.itemDetails:{};
+}
+function itemDetailV32(item,index){
+  const detail=itemDetailsV32(item)[String(index)];
+  return detail&&typeof detail==="object"?detail:{reviewRequested:false,note:""};
+}
+function setItemDetailV32(item,index,changes){
+  const details={...itemDetailsV32(item)};
+  const previous=itemDetailV32(item,index);
+  const next={...previous,...changes,updatedAt:new Date().toISOString()};
+  next.reviewRequested=!!next.reviewRequested;
+  next.note=String(next.note||"").trim().slice(0,200);
+  if(!next.reviewRequested&&!next.note)delete details[String(index)];
+  else details[String(index)]=next;
+  item.itemDetails=details;
+  return next;
+}
+function reviewRequestedIndicesV32(item){
+  const total=Math.max(0,+item.total||0);
+  return Object.entries(itemDetailsV32(item))
+    .filter(([key,detail])=>Number.isInteger(+key)&&+key>=0&&+key<total&&detail?.reviewRequested)
+    .map(([key])=>+key)
+    .sort((a,b)=>a-b);
+}
+function openTodoMemoEditorV32(materialId,index){
+  const editor=document.getElementById(`todoMemoEditor-${materialId}-${index}`);
+  if(!editor)return;
+  editor.classList.toggle("show");
+  if(editor.classList.contains("show"))editor.querySelector("input")?.focus();
+}
+function saveTodoMemoV32(materialId,index){
+  const input=document.getElementById(`todoMemoInput-${materialId}-${index}`);
+  const materials=loadMaterials();
+  const materialIndex=materials.findIndex(item=>item.id===materialId);
+  if(materialIndex<0||!input)return;
+  const item=materials[materialIndex];
+  setItemDetailV32(item,index,{note:input.value});
+  item.updatedAt=new Date().toISOString();
+  materials[materialIndex]=item;
+  if(!saveMaterials(materials)){toast("メモを保存できませんでした");return}
+  renderRegisteredMaterials();
+  renderMaterialEditList();
+  toast(input.value.trim()?"メモを保存しました":"メモを削除しました");
+}
+function toggleReviewRequestV32(materialId,index){
+  const materials=loadMaterials();
+  const materialIndex=materials.findIndex(item=>item.id===materialId);
+  if(materialIndex<0)return;
+  const item=materials[materialIndex];
+  const current=itemDetailV32(item,index);
+  const next=setItemDetailV32(item,index,{reviewRequested:!current.reviewRequested});
+  item.updatedAt=new Date().toISOString();
+  materials[materialIndex]=item;
+  if(!saveMaterials(materials)){toast("復習指定を保存できませんでした");return}
+  syncStoredTodoCompletionV32(materialId,materialProgressV31(item));
+  renderRegisteredMaterials();
+  renderMaterialEditList();
+  toast(next.reviewRequested?"次の復習日に表示します":"復習指定を解除しました");
+}
+
 function todoPhaseLabelV31(item,todo){
   if(todo.adjustment)return "調整日";
   const type=inferStudyType(item);
@@ -3028,7 +3505,7 @@ function todoPhaseLabelV31(item,todo){
   return "新しい問題に取り組む日";
 }
 
-function buildTodayTodoForMaterialV31(item,today){
+function buildTodayTodoForMaterialV31(item,today,excludedIndices=[]){
   const start=parseLocalDate(item.startDate);
   if(start&&today<start)return null;
 
@@ -3039,6 +3516,7 @@ function buildTodayTodoForMaterialV31(item,today){
   const amountBase=typeof baseInfo==="object"?baseInfo.amount:baseInfo;
   const phase=typeof baseInfo==="object"?baseInfo.phase:"standard";
   const date=localDateKey(today);
+  const excluded=new Set(excludedIndices.map(Number));
 
   if(phase==="adjustment"){
     return {
@@ -3054,33 +3532,40 @@ function buildTodayTodoForMaterialV31(item,today){
       completed:false
     };
   }
-  if(amountBase<=0)return null;
+  if(amountBase<=0&&phase!=="review")return null;
 
   const type=inferStudyType(item);
+  const clearStage=materialTodoClearStageV32(item);
   let candidates=[];
-  let requiredStageForIndex=()=>1;
+  let requiredStageForIndex=()=>clearStage;
+  let reviewIndices=[];
 
-  if(type==="cycle"){
+  if(phase==="review"){
+    reviewIndices=reviewRequestedIndicesV32(item);
+    const requestedSet=new Set(reviewIndices);
+    const automatic=progress.map((stage,index)=>({stage,index}))
+      .filter(entry=>clearStage>0&&entry.stage>0&&entry.stage<clearStage&&!excluded.has(entry.index)&&!requestedSet.has(entry.index))
+      .map(entry=>entry.index);
+    candidates=[...reviewIndices,...automatic];
+    requiredStageForIndex=index=>clearStage>0?clearStage:Math.max(1,progress[index]||1);
+  }else if(type==="cycle"){
     const unfinished=progress.map((stage,index)=>({stage,index})).filter(x=>x.stage<maxStage);
     if(!unfinished.length)return null;
     const currentRound=Math.min(...unfinished.map(x=>x.stage));
-    candidates=unfinished.filter(x=>x.stage===currentRound).map(x=>x.index);
+    candidates=unfinished.filter(x=>x.stage===currentRound&&!excluded.has(x.index)).map(x=>x.index);
     requiredStageForIndex=()=>Math.min(maxStage,currentRound+1);
-  }else if(type==="mastery"&&phase==="review"){
-    candidates=progress.map((stage,index)=>({stage,index}))
-      .filter(x=>x.stage>0&&x.stage<maxStage)
-      .map(x=>x.index);
-    requiredStageForIndex=index=>Math.min(maxStage,(progress[index]||0)+1);
   }else{
     candidates=progress.map((stage,index)=>({stage,index}))
-      .filter(x=>x.stage===0)
+      .filter(x=>x.stage===0&&!excluded.has(x.index))
       .map(x=>x.index);
-    requiredStageForIndex=()=>1;
+    requiredStageForIndex=()=>clearStage;
   }
 
   if(!candidates.length)return null;
-  const amount=deadlineAmountForToday(item,amountBase,today,candidates.length);
-  const indices=candidates.slice(0,amount);
+  const amount=deadlineAmountForToday(item,Math.max(1,amountBase),today,candidates.length);
+  const indices=phase==="review"
+    ?[...reviewIndices,...candidates.filter(index=>!reviewIndices.includes(index)).slice(0,Math.max(0,amount-reviewIndices.length))]
+    :candidates.slice(0,amount);
   if(!indices.length)return null;
 
   return {
@@ -3094,7 +3579,8 @@ function buildTodayTodoForMaterialV31(item,today){
     unit:item.unit,
     indices,
     requiredStages:indices.map(requiredStageForIndex),
-    rangeText:compressNumberRanges(indices),
+    reviewIndices:reviewIndices.filter(index=>indices.includes(index)),
+    rangeText:compressNumberRangesForMaterialV32(indices,item),
     phase,
     completed:false
   };
@@ -3111,18 +3597,9 @@ function mergeExistingTodayTodoV31(existing,generated,item){
   if(!indices.length)return generated;
 
   const maxStage=Math.max(1,progressStageLabels(item).length);
-  let requiredStages=[];
-  if(Array.isArray(existing.requiredStages)&&existing.requiredStages.length===indices.length){
-    requiredStages=existing.requiredStages.map(v=>Math.max(1,Math.min(maxStage,+v||1)));
-  }else if(existing.phase==="review"){
-    const stage=Math.max(1,Math.min(maxStage,+existing.targetStage||maxStage));
-    requiredStages=indices.map(()=>stage);
-  }else if(inferStudyType(item)==="cycle"){
-    const stage=Math.max(1,Math.min(maxStage,+existing.targetStage||1));
-    requiredStages=indices.map(()=>stage);
-  }else{
-    requiredStages=indices.map(()=>1);
-  }
+  const requiredStages=inferStudyType(item)==="cycle"&&Array.isArray(existing.requiredStages)&&existing.requiredStages.length===indices.length
+    ?existing.requiredStages.map(stage=>Math.max(1,Math.min(maxStage,+stage||1)))
+    :indices.map(()=>materialTodoClearStageV32(item));
 
   return {
     ...existing,
@@ -3131,8 +3608,65 @@ function mergeExistingTodayTodoV31(existing,generated,item){
     schemaVersion:TODO_SCHEMA_VERSION_V31,
     indices,
     requiredStages,
-    rangeText:compressNumberRanges(indices),
+    rangeText:compressNumberRangesForMaterialV32(indices,item),
     completedAt:existing.completedAt||null
+  };
+}
+
+function requiredStageForSavedTodoV32(todo,position,item){
+  const maxStage=Math.max(1,progressStageLabels(item).length);
+  const explicit=Array.isArray(todo.requiredStages)?todo.requiredStages[position]:null;
+  return Math.max(1,Math.min(maxStage,+explicit||+todo.targetStage||1));
+}
+function collectCarryoverV32(item,saved,today){
+  const date=localDateKey(today);
+  const total=Math.max(0,+item.total||0);
+  const progress=materialProgressV31(item);
+  const clearStage=materialTodoClearStageV32(item);
+  const requiredByIndex=new Map();
+  saved.filter(todo=>todo.source==="MIERU_STUDY"&&todo.materialId===item.id&&todo.date<date&&!todo.adjustment&&Array.isArray(todo.indices))
+    .sort((a,b)=>String(a.date).localeCompare(String(b.date)))
+    .forEach(todo=>todo.indices.forEach((rawIndex,position)=>{
+      const index=+rawIndex;
+      if(!Number.isInteger(index)||index<0||index>=total)return;
+      const required=clearStage>0?clearStage:requiredStageForSavedTodoV32(todo,position,item);
+      if((progress[index]||0)>=required)return;
+      requiredByIndex.set(index,Math.max(requiredByIndex.get(index)||1,required));
+    }));
+  const indices=[...requiredByIndex.keys()];
+  return {indices,requiredStages:indices.map(index=>requiredByIndex.get(index)||1)};
+}
+function mergeCarryoverV32(todo,carry,item,date){
+  if(!carry.indices.length)return todo;
+  const base=todo&& !todo.adjustment?todo:{
+    id:`${date}:${item.id}`,
+    date,
+    source:"MIERU_STUDY",
+    schemaVersion:TODO_SCHEMA_VERSION_V31,
+    materialId:item.id,
+    title:item.title,
+    subject:item.subject,
+    unit:item.unit,
+    phase:"carryover",
+    completed:false,
+    indices:[],
+    requiredStages:[]
+  };
+  const requiredByIndex=new Map();
+  carry.indices.forEach((index,position)=>requiredByIndex.set(index,carry.requiredStages[position]||1));
+  (base.indices||[]).forEach((index,position)=>{
+    const required=requiredStageForSavedTodoV32(base,position,item);
+    requiredByIndex.set(index,Math.max(requiredByIndex.get(index)||1,required));
+  });
+  const carrySet=new Set(carry.indices);
+  const indices=[...new Set([...carry.indices,...(base.indices||[])])];
+  return {
+    ...base,
+    adjustment:false,
+    indices,
+    requiredStages:indices.map(index=>requiredByIndex.get(index)||1),
+    carryoverIndices:indices.filter(index=>carrySet.has(index)),
+    rangeText:compressNumberRangesForMaterialV32(indices,item)
   };
 }
 
@@ -3146,9 +3680,15 @@ function loadTodayTodosV31(active,today){
   const todos=[];
 
   active.forEach(item=>{
-    const generated=buildTodayTodoForMaterialV31(item,today);
-    if(!generated)return;
-    todos.push(mergeExistingTodayTodoV31(previous.get(item.id),generated,item));
+    const carry=collectCarryoverV32(item,saved,today);
+    const generated=buildTodayTodoForMaterialV31(item,today,item.todoPolicy==="deadline"?[]:carry.indices);
+    const old=previous.get(item.id);
+    let current=generated?mergeExistingTodayTodoV31(old,generated,item):old||null;
+    if(current&&!current.adjustment){
+      current=mergeExistingTodayTodoV31(current,{...current,title:item.title,subject:item.subject,unit:item.unit,date},item);
+    }
+    current=mergeCarryoverV32(current,carry,item,date);
+    if(current)todos.push(current);
   });
 
   const other=saved.filter(x=>x.date!==date||x.source!=="MIERU_STUDY");
@@ -3156,10 +3696,14 @@ function loadTodayTodosV31(active,today){
   return todos;
 }
 
-function todoIsCompleteV31(todo,progress){
+function todoItemIsCompleteV32(todo,index,position,progress,item){
+  const stageComplete=(progress[index]||0)>=(todo.requiredStages?.[position]||1);
+  const needsReview=Array.isArray(todo.reviewIndices)&&todo.reviewIndices.map(Number).includes(+index)&&itemDetailV32(item,index).reviewRequested;
+  return stageComplete&&!needsReview;
+}
+function todoIsCompleteV31(todo,progress,item){
   if(todo.adjustment)return false;
-  const required=Array.isArray(todo.requiredStages)?todo.requiredStages:[];
-  return todo.indices.every((index,position)=>(progress[index]||0)>=(required[position]||1));
+  return todo.indices.every((index,position)=>todoItemIsCompleteV32(todo,index,position,progress,item));
 }
 
 function remainingFromProgressV31(item,progress){
@@ -3168,6 +3712,23 @@ function remainingFromProgressV31(item,progress){
     return progress.filter(stage=>(+stage||0)<lastStage).length;
   }
   return progress.filter(stage=>(+stage||0)<1).length;
+}
+function syncStoredTodoCompletionV32(materialId,progress){
+  const item=loadMaterials().find(material=>material.id===materialId);
+  if(!item)return false;
+  const todos=loadSharedTodos();
+  let changed=false;
+  todos.forEach(todo=>{
+    if(todo.materialId!==materialId||todo.adjustment||!Array.isArray(todo.indices))return;
+    const normalized={...todo,requiredStages:todo.indices.map((_,position)=>requiredStageForSavedTodoV32(todo,position,item))};
+    const complete=todoIsCompleteV31(normalized,progress,item);
+    if(complete!==!!todo.completed){
+      todo.completed=complete;
+      todo.completedAt=complete?new Date().toISOString():null;
+      changed=true;
+    }
+  });
+  return !changed||saveSharedTodos(todos);
 }
 
 function changeTodoStageV31(materialId,itemIndex,stage,checked){
@@ -3185,6 +3746,12 @@ function changeTodoStageV31(materialId,itemIndex,stage,checked){
     ?Math.max(current,level)
     :Math.min(current,level-1);
 
+  const todayTodo=loadSharedTodos().find(todo=>todo.date===localDateKey()&&todo.materialId===materialId&&todo.phase==="review");
+  const todayPosition=todayTodo?.indices?.indexOf(itemIndex)??-1;
+  const todayRequired=todayPosition>=0?requiredStageForSavedTodoV32(todayTodo,todayPosition,item):1;
+  if(checked&&progress[itemIndex]>=todayRequired&&Array.isArray(todayTodo?.reviewIndices)&&todayTodo.reviewIndices.map(Number).includes(+itemIndex)){
+    setItemDetailV32(item,itemIndex,{reviewRequested:false});
+  }
   item.progress=progress;
   item.remaining=remainingFromProgressV31(item,progress);
   item.completedAmount=Math.max(0,(+item.total||0)-item.remaining);
@@ -3194,6 +3761,7 @@ function changeTodoStageV31(materialId,itemIndex,stage,checked){
     toast("進捗を保存できませんでした");
     return;
   }
+  syncStoredTodoCompletionV32(materialId,progress);
 
   if(currentProgressMaterialId===materialId)workingProgress=progress.slice();
   renderRegisteredMaterials();
@@ -3203,26 +3771,40 @@ function changeTodoStageV31(materialId,itemIndex,stage,checked){
 function renderTodoCardV31(todo,item){
   const progress=materialProgressV31(item);
   const labels=progressStageLabels(item);
-  const complete=todoIsCompleteV31(todo,progress);
+  const complete=todoIsCompleteV31(todo,progress,item);
   const required=todo.requiredStages||[];
-  const unfinished=todo.indices.filter((index,position)=>(progress[index]||0)<(required[position]||1)).length;
+  const unfinished=todo.indices.filter((index,position)=>!todoItemIsCompleteV32(todo,index,position,progress,item)).length;
   const finish=formatProgressFinishDate(item);
-  const legend=labels.map((label,index)=>`<span><i>${index+1}</i>${esc(label)}</span>`).join("");
+  const legend=labels.map((label,index)=>`<span><i>${index+1}</i>${esc(label)}</span>`).join("")+`<span><i>↻</i>復習日にもう一度</span><span><i>✎</i>メモ</span>`;
+  const carryover=new Set(Array.isArray(todo.carryoverIndices)?todo.carryoverIndices.map(Number):[]);
+  const scheduledReview=new Set(Array.isArray(todo.reviewIndices)?todo.reviewIndices.map(Number):[]);
   const rows=todo.indices.map(index=>{
     const current=Math.max(0,Math.min(labels.length,+progress[index]||0));
+    const displayNumber=materialDisplayNumberV32(item,index);
+    const itemText=item.showSerialNumber?`${item.unit} ${displayNumber}`:`${displayNumber}${item.unit}`;
+    const detail=itemDetailV32(item,index);
     const checks=labels.map((label,stageIndex)=>{
       const level=stageIndex+1;
       return `<label class="todo-stage-check-label">
         <input class="todo-stage-check" type="checkbox" ${current>=level?"checked":""}
-          aria-label="${index+1}${esc(item.unit)} ${esc(label)}"
+          aria-label="${esc(itemText)} ${esc(label)}"
           title="${esc(label)}"
           onchange="changeTodoStageV31('${item.id}',${index},${level},this.checked)">
         <span>${level}</span>
       </label>`;
     }).join("");
-    return `<div class="todo-v31-row">
-      <div class="todo-v31-number"><strong>${index+1}</strong><small>${esc(item.unit)}</small></div>
-      <div class="todo-stage-checks">${checks}</div>
+    const reviewTitle=detail.reviewRequested?(todo.phase==="review"&&scheduledReview.has(index)?"復習済みにする":"復習指定を解除する"):"復習日にもう一度";
+    return `<div class="todo-v31-item">
+      <div class="todo-v31-row">
+        <div class="todo-v31-number"><strong>${item.showSerialNumber?`${esc(item.unit)} ${displayNumber}`:displayNumber}</strong>${item.showSerialNumber?"":`<small>${esc(item.unit)}</small>`}${carryover.has(index)?'<span class="todo-v31-carryover">積み残し</span>':""}${scheduledReview.has(index)?'<span class="todo-v31-carryover">復習指定</span>':""}</div>
+        <div class="todo-stage-checks">${checks}</div>
+        <div class="todo-v31-tools">
+          <button class="todo-v31-tool review ${detail.reviewRequested?"active":""}" type="button" title="${reviewTitle}" aria-label="${esc(itemText)} ${reviewTitle}" onclick="toggleReviewRequestV32('${item.id}',${index})">↻</button>
+          <button class="todo-v31-tool memo ${detail.note?"active":""}" type="button" title="メモ" aria-label="${esc(itemText)}のメモ" onclick="openTodoMemoEditorV32('${item.id}',${index})">✎</button>
+        </div>
+      </div>
+      ${detail.note?`<div class="todo-v31-memo"><span>メモ</span><span>${esc(detail.note)}</span></div>`:""}
+      <div class="todo-v31-memo-editor" id="todoMemoEditor-${item.id}-${index}"><input id="todoMemoInput-${item.id}-${index}" maxlength="200" value="${esc(detail.note)}" placeholder="例：小問（2）（4）、符号に注意" onkeydown="if(event.key==='Enter'){event.preventDefault();saveTodoMemoV32('${item.id}',${index})}"><button type="button" onclick="saveTodoMemoV32('${item.id}',${index})">保存</button></div>
     </div>`;
   }).join("");
 
@@ -3255,7 +3837,7 @@ function renderTodayTodos(){
   todos.forEach(todo=>{
     const item=materialMap.get(todo.materialId);
     if(!item||todo.adjustment)return;
-    const complete=todoIsCompleteV31(todo,materialProgressV31(item));
+    const complete=todoIsCompleteV31(todo,materialProgressV31(item),item);
     if(complete&&!todo.completedAt)todo.completedAt=new Date().toISOString();
     if(!complete)todo.completedAt=null;
     todo.completed=complete;
@@ -3275,14 +3857,14 @@ function renderTodayTodos(){
   const remainingUnits=remaining.reduce((sum,todo)=>sum+todo.indices.filter((index,position)=>{
     const item=materialMap.get(todo.materialId);
     if(!item)return false;
-    return (materialProgressV31(item)[index]||0)<(todo.requiredStages?.[position]||1);
+    return !todoItemIsCompleteV32(todo,index,position,materialProgressV31(item),item);
   }).length,0);
 
   if(countLabel)countLabel.textContent=`${remaining.length}件`;
   if(headline)headline.textContent=remaining.length?`あと${remainingUnits}項目`:"今日の予定は完了";
   if(summary){
     if(remaining.length){
-      summary.textContent=remaining.map(todo=>`${todo.subject} ${todo.rangeText}${todo.unit}`).join("・");
+      summary.textContent=remaining.map(todo=>`${todo.subject} ${todoRangeSummaryV32(todo,materialMap.get(todo.materialId))}`).join("・");
     }else if(todos.some(todo=>todo.adjustment)){
       summary.textContent="調整日です。自由に学習を調整できます";
     }else{
