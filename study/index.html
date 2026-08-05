@@ -72,11 +72,11 @@ main{padding:18px}
 .hero h2{font-size:22px;margin:0}
 .progress-ring{
   width:78px;height:78px;border-radius:50%;
-  background:conic-gradient(var(--accent) 0 38%, #e7e1dc 38% 100%);
+  background:conic-gradient(var(--accent) 0 0%, #e7e1dc 0% 100%);
   display:grid;place-items:center;flex:0 0 auto
 }
 .progress-ring::after{
-  content:"38%";width:58px;height:58px;border-radius:50%;
+  content:attr(data-progress);width:58px;height:58px;border-radius:50%;
   background:white;display:grid;place-items:center;font-weight:800
 }
 .primary{
@@ -482,6 +482,13 @@ input[type=checkbox]:disabled{opacity:.35}
   font-weight:700;
 }
 .serial-number-toggle input{width:20px;height:20px;margin:0}
+#startNumberField{margin-bottom:0}
+.serial-number-note{
+  margin:6px 2px 0;
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.55;
+}
 .material-data-management{
   display:none;
   margin-top:16px;
@@ -522,7 +529,26 @@ input[type=checkbox]:disabled{opacity:.35}
 .empty-list{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px 16px;text-align:center;color:var(--muted);font-size:13px;line-height:1.7}
 .daily-plan-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
 .daily-plan-row input{min-width:0;text-align:center;font-size:20px;font-weight:800}
-.remaining-note{margin-top:-6px;color:var(--muted);font-size:11px;line-height:1.5}
+.remaining-note{margin-top:6px;color:var(--muted);font-size:11px;line-height:1.5}
+.initial-todo-card .settings-note{margin-bottom:12px}
+.initial-todo-fields{display:grid;gap:12px}
+.initial-todo-carryover{
+  padding:12px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:#faf9f7;
+}
+.initial-todo-toggle{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin-bottom:10px;
+  font-size:13px;
+  font-weight:700;
+}
+.initial-todo-toggle input{flex:0 0 auto}
+.initial-todo-example{margin-top:7px;color:var(--muted);font-size:10px;line-height:1.55}
+.initial-todo-card.editing-hidden{display:none}
 .spine[data-generated="true"]{flex-shrink:0}
 @media(max-width:430px){.plan-tab{font-size:12px;padding-inline:3px}.date-fields input{font-size:12px;padding-inline:5px}}
 
@@ -588,6 +614,30 @@ input[type=checkbox]:disabled{opacity:.35}
   font-size:12px;
   line-height:1.6;
 }
+.settings-accordion{
+  padding:0;
+  overflow:hidden;
+}
+.settings-accordion > summary{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:16px;
+  cursor:pointer;
+  list-style:none;
+  font-size:16px;
+  font-weight:800;
+}
+.settings-accordion > summary::-webkit-details-marker{display:none}
+.settings-accordion > summary::after{
+  content:"⌄";
+  color:var(--muted);
+  font-size:18px;
+  transition:transform .2s ease;
+}
+.settings-accordion[open] > summary::after{transform:rotate(180deg)}
+.settings-accordion-body{padding:0 16px 16px}
 .settings-subtitle{
   margin:0 0 10px;
   font-size:14px;
@@ -679,6 +729,22 @@ input[type=checkbox]:disabled{opacity:.35}
   box-shadow:var(--shadow);
 }
 .progress-meta-title{font-size:17px;font-weight:800;line-height:1.45}
+.progress-title-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.progress-edit-button{
+  flex:0 0 auto;
+  border:1px solid var(--accent);
+  border-radius:10px;
+  background:#fff;
+  color:#547c98;
+  padding:7px 11px;
+  font-size:12px;
+  font-weight:800;
+}
 .progress-meta-sub{margin-top:4px;color:var(--muted);font-size:12px}
 .progress-image-switch{
   display:grid;
@@ -1445,26 +1511,31 @@ input[type=checkbox]:disabled{opacity:.35}
 .todo-v31-memo-editor button{
   border:1px solid var(--accent);border-radius:10px;background:#fff;color:#547c98;padding:8px 11px;font-weight:800
 }
-.todo-stage-check-label{
+.todo-stage-button{
   display:grid;
-  justify-items:center;
-  gap:2px;
-  color:var(--muted);
-  font-size:8px;
-}
-input.todo-stage-check{
-  width:26px;
-  height:26px;
-  margin:0;
+  place-items:center;
+  width:28px;
+  height:28px;
+  padding:0;
+  border:1px solid #c9c1ba;
   border-radius:8px;
+  background:#fff;
+  color:#8b837d;
+  font-size:12px;
+  font-weight:800;
   cursor:pointer;
+}
+.todo-stage-button.active{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#fff;
 }
 @media(max-width:430px){
   .todo-v31 .todo-head{grid-template-columns:minmax(0,1fr)}
   .todo-v31-status{justify-self:start}
   .todo-v31-row{grid-template-columns:minmax(46px,1fr) auto auto;padding-inline:13px;gap:7px}
   .todo-stage-checks{gap:7px}
-  input.todo-stage-check{width:26px;height:26px}
+  .todo-stage-button{width:26px;height:26px}
   .todo-v31-tool{width:26px;height:26px}
 }
 
@@ -1505,7 +1576,7 @@ nav button.active{color:var(--accent);font-weight:700}
         <h2 id="homeTodoHeadline">教材を登録しましょう</h2>
         <div class="small" id="homeTodoSummary" style="margin-top:7px">登録した教材から学習計画を作成します</div>
       </div>
-      <div class="progress-ring"></div>
+      <div class="progress-ring" data-progress="0%" aria-label="今日の進捗 0%"></div>
     </div>
     <button class="primary" onclick="go('todo')">今日のTODOを見る</button>
   </div>
@@ -1581,16 +1652,36 @@ nav button.active{color:var(--accent);font-weight:700}
     </div>
     <div class="inline">
       <div class="field"><label>総数</label><input id="materialTotal" type="number" min="1" value="" placeholder="例：364" oninput="syncRemainingAmount();recalculatePlan()"></div>
-      <div class="field"><label>残り</label><input id="materialRemaining" type="number" min="0" value="" placeholder="途中登録にも対応" oninput="remainingWasAuto=false;recalculatePlan()"></div>
+      <div class="field"><label>残り</label><input id="materialRemaining" type="number" min="0" value="" placeholder="途中登録にも対応" oninput="remainingWasAuto=false;recalculatePlan()"><div class="remaining-note">途中から登録する場合は、現在残っている問題数・ページ数・単語数などを入力してください。</div></div>
     </div>
     <div class="serial-number-settings">
       <label class="serial-number-toggle"><input id="showSerialNumber" type="checkbox" onchange="syncSerialNumberUI()">通番を表示する</label>
       <div class="field" id="startNumberField"><label>開始番号</label><input id="startNumber" type="number" min="1" value="1" disabled></div>
     </div>
-    <div class="remaining-note">途中から登録する場合は、現在残っている問題数・ページ数・単語数などを入力してください。</div>
+    <div class="serial-number-note">教材の番号が「51、52…」のように途中から始まる場合にONにし、開始番号へ「51」と入力します。TODOにも51番から表示されます。通常はOFFのままで構いません。</div>
     <div class="date-fields" style="margin-top:14px">
       <div class="field"><label>取り組み開始日</label><input id="startDate" type="date" value="" onchange="recalculatePlan()"></div>
       <div class="field"><label>終了目標日（任意）</label><input id="targetDate" type="date" value="" onchange="recalculatePlan()"></div>
+    </div>
+  </div>
+  <div class="form-card initial-todo-card" id="initialTodoSetupCard">
+    <h3>途中から登録するときの初回TODO</h3>
+    <p class="settings-note">新しい教材を最初から始める場合は空欄で構いません。ここで指定した内容は登録日のTODOにだけ反映されます。</p>
+    <div class="initial-todo-fields">
+      <div class="field">
+        <label for="initialTodoStartNumber">今日の予定の開始番号</label>
+        <input id="initialTodoStartNumber" type="number" min="1" placeholder="例：71">
+        <div class="initial-todo-example">1日の量が5なら、71を入力すると71〜75を今日の予定にします。</div>
+      </div>
+      <div class="initial-todo-carryover">
+        <label class="initial-todo-toggle"><input id="includeInitialCarryover" type="checkbox" onchange="syncInitialTodoSetupUI()">前日までの未消化分を加える</label>
+        <div class="field" style="margin:0">
+          <label for="initialCarryoverNumbers">積み残し番号</label>
+          <input id="initialCarryoverNumbers" type="text" inputmode="numeric" placeholder="例：67,68,69" disabled>
+        </div>
+        <div class="initial-todo-example">カンマ区切りまたは「67〜69」のような範囲で入力できます。クリアライン未達として今日の予定より前に表示します。</div>
+        <div class="initial-todo-example">不正解だった問題を積み残す場合は、下の「今日のクリアライン」を「自力で解けた」に設定してください。</div>
+      </div>
     </div>
   </div>
   <div class="form-card study-type-card">
@@ -1736,7 +1827,10 @@ nav button.active{color:var(--accent);font-weight:700}
 
 <section class="screen" id="progress">
 <div class="progress-meta">
-    <div class="progress-meta-title" id="progressMaterialTitle">教材名</div>
+    <div class="progress-title-row">
+      <div class="progress-meta-title" id="progressMaterialTitle">教材名</div>
+      <button class="progress-edit-button" type="button" onclick="editCurrentProgressMaterial()">編集</button>
+    </div>
     <div class="progress-meta-sub" id="progressMaterialMeta">教科・残り数・終了予定日</div>
 
     <div class="progress-image-switch">
@@ -1787,30 +1881,32 @@ nav button.active{color:var(--accent);font-weight:700}
   </div>
 
   <div class="settings-card settings-section">
-    <h3>本箱の色設定</h3>
-    <p class="settings-note">本箱の色を選ぶと、ホームの本箱へすぐに反映されます。</p>
-    <div class="bookbox-color-preview" aria-label="本箱の色プレビュー">
-      <img id="bookboxColorPreviewImage" alt="本箱の色プレビュー">
-      <div class="preview-books" aria-hidden="true">
-        <span class="preview-book a4"></span>
-        <span class="preview-book b5"></span>
-        <span class="preview-book a5"></span>
-      </div>
-    </div>
-    <div class="bookbox-preset-grid">
-      <button class="bookbox-preset-button" type="button" data-preset="natural" onclick="applyBookboxPresetV20('natural')">ナチュラルオーク</button>
-      <button class="bookbox-preset-button" type="button" data-preset="walnut" onclick="applyBookboxPresetV20('walnut')">ウォールナット</button>
-      <button class="bookbox-preset-button" type="button" data-preset="whiteoak" onclick="applyBookboxPresetV20('whiteoak')">ホワイトオーク</button>
-      <button class="bookbox-preset-button" type="button" data-preset="darkoak" onclick="applyBookboxPresetV20('darkoak')">ダークオーク</button>
-    </div>
-    <button class="mycolor-button" type="button" onclick="toast('マイカラー作成は今後追加予定です')">＋ マイカラーを作る（今後追加予定）</button>
-  </div>
-
-  <div class="settings-card settings-section">
     <h3>登録済み教材の編集と計画変更</h3>
     <p class="settings-note">教材名・残り数・終了目標日・計画方法などを変更できます。</p>
     <div class="material-edit-list" id="materialEditList"></div>
   </div>
+
+  <details class="settings-card settings-section settings-accordion">
+    <summary>本箱の色設定</summary>
+    <div class="settings-accordion-body">
+      <p class="settings-note">本箱の色を選ぶと、ホームの本箱へすぐに反映されます。</p>
+      <div class="bookbox-color-preview" aria-label="本箱の色プレビュー">
+        <img id="bookboxColorPreviewImage" alt="本箱の色プレビュー">
+        <div class="preview-books" aria-hidden="true">
+          <span class="preview-book a4"></span>
+          <span class="preview-book b5"></span>
+          <span class="preview-book a5"></span>
+        </div>
+      </div>
+      <div class="bookbox-preset-grid">
+        <button class="bookbox-preset-button" type="button" data-preset="natural" onclick="applyBookboxPresetV20('natural')">ナチュラルオーク</button>
+        <button class="bookbox-preset-button" type="button" data-preset="walnut" onclick="applyBookboxPresetV20('walnut')">ウォールナット</button>
+        <button class="bookbox-preset-button" type="button" data-preset="whiteoak" onclick="applyBookboxPresetV20('whiteoak')">ホワイトオーク</button>
+        <button class="bookbox-preset-button" type="button" data-preset="darkoak" onclick="applyBookboxPresetV20('darkoak')">ダークオーク</button>
+      </div>
+      <button class="mycolor-button" type="button" onclick="toast('マイカラー作成は今後追加予定です')">＋ マイカラーを作る（今後追加予定）</button>
+    </div>
+  </details>
 </section>
 
 </main>
@@ -2348,7 +2444,12 @@ function syncSerialNumberUI(){
   const input=document.getElementById("startNumber");
   if(input){input.disabled=!enabled;if(enabled&&(+input.value||0)<1)input.value="1"}
 }
-function clearRegistrationForm(){exitEditMode();["materialSubject","materialTitle","materialPublisher","paperSize","materialUnit","materialTotal","materialRemaining","targetDate","dailyAmount","newDays","reviewDays","bufferEvery","bufferDays","dailyNewAmount"].forEach(id=>document.getElementById(id).value="");document.getElementById("startDate").value=todayISO();document.querySelectorAll(".weekday-amount").forEach(x=>x.value="");document.getElementById("showSerialNumber").checked=false;document.getElementById("startNumber").value="1";syncSerialNumberUI();selectedSpineTone="basic";selectedPlanMode="daily";document.querySelectorAll(".tone-button").forEach(x=>x.classList.toggle("active",x.dataset.tone==="basic"));document.querySelectorAll(".plan-tab").forEach(x=>x.classList.toggle("active",x.dataset.plan==="daily"));["daily","weekly","interval"].forEach(m=>document.getElementById(m+"PlanPane").classList.toggle("active",m==="daily"));materialImageData="";motivationImageData="";
+function syncInitialTodoSetupUI(){
+  const enabled=!!document.getElementById("includeInitialCarryover")?.checked;
+  const input=document.getElementById("initialCarryoverNumbers");
+  if(input)input.disabled=!enabled;
+}
+function clearRegistrationForm(){exitEditMode();["materialSubject","materialTitle","materialPublisher","paperSize","materialUnit","materialTotal","materialRemaining","targetDate","dailyAmount","newDays","reviewDays","bufferEvery","bufferDays","dailyNewAmount","initialTodoStartNumber","initialCarryoverNumbers"].forEach(id=>document.getElementById(id).value="");document.getElementById("startDate").value=todayISO();document.querySelectorAll(".weekday-amount").forEach(x=>x.value="");document.getElementById("showSerialNumber").checked=false;document.getElementById("startNumber").value="1";document.getElementById("includeInitialCarryover").checked=false;syncSerialNumberUI();syncInitialTodoSetupUI();selectedSpineTone="basic";selectedPlanMode="daily";document.querySelectorAll(".tone-button").forEach(x=>x.classList.toggle("active",x.dataset.tone==="basic"));document.querySelectorAll(".plan-tab").forEach(x=>x.classList.toggle("active",x.dataset.plan==="daily"));["daily","weekly","interval"].forEach(m=>document.getElementById(m+"PlanPane").classList.toggle("active",m==="daily"));materialImageData="";motivationImageData="";
 const i=document.getElementById("materialImage");i.src="";i.style.display="none";
 document.getElementById("materialImagePlaceholder").style.display="block";
 document.getElementById("materialImageInput").value="";
@@ -2758,6 +2859,97 @@ function pruneMaterialTodosV32(materialId,total,item){
   }).filter(todo=>todo.materialId!==materialId||todo.adjustment||!Array.isArray(todo.indices)||todo.indices.length>0);
   return saveSharedTodos(todos);
 }
+function normalizeInitialNumberTextV33(value){
+  return String(value||"")
+    .replace(/[０-９]/g,char=>String(char.charCodeAt(0)-65248))
+    .replace(/[、，]/g,",")
+    .replace(/[－―ー−]/g,"-")
+    .replace(/\s+/g,",")
+    .replace(/,+/g,",")
+    .replace(/^,|,$/g,"");
+}
+function parseInitialNumberListV33(value){
+  const normalized=normalizeInitialNumberTextV33(value);
+  if(!normalized)return [];
+  const numbers=[];
+  for(const token of normalized.split(",")){
+    const match=token.match(/^(\d+)(?:[-~〜](\d+))?$/);
+    if(!match)return null;
+    const first=+match[1],last=match[2]?+match[2]:first;
+    if(first<=0||last<=0||Math.abs(last-first)>5000)return null;
+    const step=first<=last?1:-1;
+    for(let number=first;;number+=step){
+      numbers.push(number);
+      if(number===last)break;
+    }
+  }
+  return [...new Set(numbers)];
+}
+function displayNumberToIndexV33(item,displayNumber){
+  const first=item.showSerialNumber?Math.max(1,+item.startNumber||1):1;
+  const index=(+displayNumber||0)-first;
+  return Number.isInteger(index)&&index>=0&&index<Math.max(0,+item.total||0)?index:-1;
+}
+function collectInitialTodoSetupV33(item){
+  const startValue=document.getElementById("initialTodoStartNumber")?.value.trim()||"";
+  const includeCarryover=!!document.getElementById("includeInitialCarryover")?.checked;
+  const carryText=document.getElementById("initialCarryoverNumbers")?.value||"";
+  if(!startValue&&!includeCarryover)return null;
+
+  const carryNumbers=includeCarryover?parseInitialNumberListV33(carryText):[];
+  if(includeCarryover&&carryNumbers===null)return{error:"積み残し番号は「67,68,69」または「67〜69」の形式で入力してください"};
+  if(includeCarryover&&!carryNumbers.length)return{error:"積み残し番号を入力してください"};
+
+  const carryIndices=[];
+  for(const number of carryNumbers||[]){
+    const index=displayNumberToIndexV33(item,number);
+    if(index<0)return{error:`積み残し番号 ${number} は教材の登録範囲外です`};
+    carryIndices.push(index);
+  }
+
+  let scheduledIndices=[];
+  if(startValue){
+    const startNumber=+startValue;
+    const startIndex=displayNumberToIndexV33(item,startNumber);
+    if(startIndex<0)return{error:`今日の開始番号 ${startValue} は教材の登録範囲外です`};
+    const today=new Date();
+    today.setHours(0,0,0,0);
+    const base=baseAmountForToday(item,today);
+    const amount=Math.max(0,typeof base==="object"?+base.amount||0:+base||0);
+    if(amount<=0)return{error:"今日の計画量が0です。計画方法または1日の量を確認してください"};
+    scheduledIndices=Array.from({length:Math.min(amount,Math.max(0,item.total-startIndex))},(_,offset)=>startIndex+offset);
+  }
+
+  const indices=[...new Set([...carryIndices,...scheduledIndices])];
+  if(!indices.length)return null;
+  return{indices,carryoverIndices:[...new Set(carryIndices)]};
+}
+function saveInitialTodoSetupV33(item,setup){
+  if(!setup?.indices?.length)return true;
+  const today=new Date();
+  today.setHours(0,0,0,0);
+  const date=localDateKey(today);
+  const requiredStage=materialTodoClearStageV32(item)||1;
+  const todo={
+    id:`${date}:${item.id}`,
+    date,
+    source:"MIERU_STUDY",
+    schemaVersion:TODO_SCHEMA_VERSION_V31,
+    materialId:item.id,
+    title:item.title,
+    subject:item.subject,
+    unit:item.unit,
+    indices:setup.indices,
+    requiredStages:setup.indices.map(()=>requiredStage),
+    carryoverIndices:setup.carryoverIndices,
+    rangeText:compressNumberRangesForMaterialV32(setup.indices,item),
+    phase:"standard",
+    initialSetup:true,
+    completed:false
+  };
+  const other=loadSharedTodos().filter(saved=>!(saved.date===date&&saved.source==="MIERU_STUDY"&&saved.materialId===item.id));
+  return saveSharedTodos([...other,todo]);
+}
 function registerMaterial(){
   const subject=document.getElementById("materialSubject").value;
   const title=document.getElementById("materialTitle").value.trim();
@@ -2813,6 +3005,9 @@ function registerMaterial(){
     updatedAt:new Date().toISOString()
   };
 
+  const initialTodoSetup=existing?null:collectInitialTodoSetupV33(item);
+  if(initialTodoSetup?.error)return toast(initialTodoSetup.error);
+
   if(existing&&Array.isArray(existing.progress)){
     const maxStage=Math.max(1,progressStageLabels(item).length);
     item.progress=existing.progress.slice(0,total).map(stage=>Math.max(0,Math.min(maxStage,+stage||0)));
@@ -2845,6 +3040,9 @@ function registerMaterial(){
   if(!savedOk){
     toast("保存できませんでした。ブラウザの保存領域を確認してください");
     return;
+  }
+  if(initialTodoSetup&&!saveInitialTodoSetupV33(item,initialTodoSetup)){
+    toast("教材は保存しましたが、初回TODOを保存できませんでした");
   }
   if(totalReduced&&!pruneMaterialTodosV32(item.id,total,item)){
     toast("教材は保存しましたが、過去のTODO範囲を更新できませんでした");
@@ -2933,6 +3131,7 @@ function startEditMaterial(id){
   document.getElementById("registerScreenSub").textContent="内容と計画を変更";
   document.getElementById("editModeBanner").classList.add("show");
   document.getElementById("registerSubmitButton").textContent="変更を保存する";
+  document.getElementById("initialTodoSetupCard")?.classList.add("editing-hidden");
 
   document.getElementById("materialSubject").value=item.subject||"";
   document.getElementById("materialTitle").value=item.title||"";
@@ -3008,11 +3207,13 @@ function exitEditMode(){
   const banner=document.getElementById("editModeBanner");
   const btn=document.getElementById("registerSubmitButton");
   const management=document.getElementById("materialDataManagement");
+  const initialTodoSetup=document.getElementById("initialTodoSetupCard");
   if(title)title.textContent="教材登録";
   if(sub)sub.textContent="実際の教材を登録";
   if(banner)banner.classList.remove("show");
   if(btn)btn.textContent="この内容で登録する";
   if(management)management.classList.remove("show");
+  if(initialTodoSetup)initialTodoSetup.classList.remove("editing-hidden");
 }
 function resetEditingMaterialProgress(){
   if(!editingMaterialId){toast("編集する教材を選択してください");return}
@@ -3099,6 +3300,10 @@ function openProgressPage(id){
   document.getElementById("showMotivationImageButton").classList.remove("active");
   go("progress");
   renderProgressPage();
+}
+function editCurrentProgressMaterial(){
+  if(!currentProgressMaterialId){toast("教材が見つかりません");return}
+  startEditMaterial(currentProgressMaterialId);
 }
 function currentProgressMaterial(){
   return loadMaterials().find(x=>x.id===currentProgressMaterialId)||null;
@@ -3731,7 +3936,7 @@ function syncStoredTodoCompletionV32(materialId,progress){
   return !changed||saveSharedTodos(todos);
 }
 
-function changeTodoStageV31(materialId,itemIndex,stage,checked){
+function changeTodoStageV31(materialId,itemIndex,stage){
   const materials=loadMaterials();
   const materialIndex=materials.findIndex(item=>item.id===materialId);
   if(materialIndex<0)return;
@@ -3742,14 +3947,12 @@ function changeTodoStageV31(materialId,itemIndex,stage,checked){
   const level=Math.max(1,Math.min(maxStage,+stage||1));
   const current=Math.max(0,Math.min(maxStage,+progress[itemIndex]||0));
 
-  progress[itemIndex]=checked
-    ?Math.max(current,level)
-    :Math.min(current,level-1);
+  progress[itemIndex]=current===level?level-1:level;
 
   const todayTodo=loadSharedTodos().find(todo=>todo.date===localDateKey()&&todo.materialId===materialId&&todo.phase==="review");
   const todayPosition=todayTodo?.indices?.indexOf(itemIndex)??-1;
   const todayRequired=todayPosition>=0?requiredStageForSavedTodoV32(todayTodo,todayPosition,item):1;
-  if(checked&&progress[itemIndex]>=todayRequired&&Array.isArray(todayTodo?.reviewIndices)&&todayTodo.reviewIndices.map(Number).includes(+itemIndex)){
+  if(progress[itemIndex]>=todayRequired&&Array.isArray(todayTodo?.reviewIndices)&&todayTodo.reviewIndices.map(Number).includes(+itemIndex)){
     setItemDetailV32(item,itemIndex,{reviewRequested:false});
   }
   item.progress=progress;
@@ -3785,13 +3988,9 @@ function renderTodoCardV31(todo,item){
     const detail=itemDetailV32(item,index);
     const checks=labels.map((label,stageIndex)=>{
       const level=stageIndex+1;
-      return `<label class="todo-stage-check-label">
-        <input class="todo-stage-check" type="checkbox" ${current>=level?"checked":""}
-          aria-label="${esc(itemText)} ${esc(label)}"
-          title="${esc(label)}"
-          onchange="changeTodoStageV31('${item.id}',${index},${level},this.checked)">
-        <span>${level}</span>
-      </label>`;
+      return `<button class="todo-stage-button ${current>=level?"active":""}" type="button"
+        aria-label="${esc(itemText)} ${esc(label)}" aria-pressed="${current>=level}"
+        title="${esc(label)}" onclick="changeTodoStageV31('${item.id}',${index},${level})">${level}</button>`;
     }).join("");
     const reviewTitle=detail.reviewRequested?(todo.phase==="review"&&scheduledReview.has(index)?"復習済みにする":"復習指定を解除する"):"復習日にもう一度";
     return `<div class="todo-v31-item">
@@ -3850,15 +4049,25 @@ function renderTodayTodos(){
   const headline=document.getElementById("homeTodoHeadline");
   const summary=document.getElementById("homeTodoSummary");
   const dateLabel=document.getElementById("homeDateLabel");
+  const progressRing=document.querySelector(".progress-ring");
   if(dateLabel)dateLabel.textContent=japaneseDateLabel(today);
 
   const actionable=todos.filter(todo=>!todo.adjustment);
   const remaining=actionable.filter(todo=>!todo.completed);
+  const totalUnits=actionable.reduce((sum,todo)=>sum+(todo.indices?.length||0),0);
   const remainingUnits=remaining.reduce((sum,todo)=>sum+todo.indices.filter((index,position)=>{
     const item=materialMap.get(todo.materialId);
     if(!item)return false;
     return !todoItemIsCompleteV32(todo,index,position,materialProgressV31(item),item);
   }).length,0);
+  const completedUnits=Math.max(0,totalUnits-remainingUnits);
+  const todayPercent=totalUnits?Math.round(completedUnits/totalUnits*100):0;
+
+  if(progressRing){
+    progressRing.dataset.progress=`${todayPercent}%`;
+    progressRing.setAttribute("aria-label",`今日の進捗 ${todayPercent}%`);
+    progressRing.style.background=`conic-gradient(var(--accent) 0 ${todayPercent}%, #e7e1dc ${todayPercent}% 100%)`;
+  }
 
   if(countLabel)countLabel.textContent=`${remaining.length}件`;
   if(headline)headline.textContent=remaining.length?`あと${remainingUnits}項目`:"今日の予定は完了";
