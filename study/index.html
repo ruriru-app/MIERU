@@ -460,8 +460,29 @@ input[type=checkbox]:disabled{opacity:.35}
 .unit-inline{font-size:12px;color:var(--muted);white-space:nowrap}
 .daily-amount-row{display:grid;grid-template-columns:auto minmax(80px,130px) auto;gap:8px;align-items:center;justify-content:center}
 .daily-amount-row input{text-align:center;font-size:20px;font-weight:800}
-.register-actions{display:grid;grid-template-columns:1fr 1.35fr;gap:10px}
-.register-actions .primary{margin-top:0}
+.register-head{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  gap:10px;
+  align-items:center;
+  margin-bottom:14px;
+}
+.register-head .section-title{margin:0!important}
+.register-back-button{
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fff;
+  color:#6e6862;
+  padding:9px 11px;
+  font-size:12px;
+  font-weight:700;
+  white-space:nowrap;
+}
+.register-actions{display:grid;gap:10px}
+.register-save-actions{display:grid;grid-template-columns:1fr 1.25fr;gap:10px}
+.register-save-actions .primary{margin-top:0;min-height:48px}
+.register-progress-button{background:#6f9fbd}
+.register-cancel-button{width:100%;min-height:44px}
 .serial-number-settings{
   display:grid;
   grid-template-columns:minmax(0,1fr) minmax(110px,.7fr);
@@ -482,13 +503,15 @@ input[type=checkbox]:disabled{opacity:.35}
   font-weight:700;
 }
 .serial-number-toggle input{width:20px;height:20px;margin:0}
-#startNumberField{margin-bottom:0}
+#startNumberField{display:none;margin-bottom:0}
+#startNumberField.active{display:block}
 .serial-number-note{
   margin:6px 2px 0;
   color:var(--muted);
   font-size:10px;
   line-height:1.55;
 }
+.work-start-note{margin-top:6px;color:var(--muted);font-size:10px;line-height:1.55}
 .material-data-management{
   display:none;
   margin-top:16px;
@@ -516,6 +539,7 @@ input[type=checkbox]:disabled{opacity:.35}
   .week-allocation{gap:4px}
   .week-box input{font-size:13px}
   .serial-number-settings{grid-template-columns:1fr}
+  .register-save-actions{grid-template-columns:1fr}
 }
 
 
@@ -529,26 +553,6 @@ input[type=checkbox]:disabled{opacity:.35}
 .empty-list{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px 16px;text-align:center;color:var(--muted);font-size:13px;line-height:1.7}
 .daily-plan-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
 .daily-plan-row input{min-width:0;text-align:center;font-size:20px;font-weight:800}
-.remaining-note{margin-top:6px;color:var(--muted);font-size:11px;line-height:1.5}
-.initial-todo-card .settings-note{margin-bottom:12px}
-.initial-todo-fields{display:grid;gap:12px}
-.initial-todo-carryover{
-  padding:12px;
-  border:1px solid var(--line);
-  border-radius:14px;
-  background:#faf9f7;
-}
-.initial-todo-toggle{
-  display:flex;
-  align-items:center;
-  gap:9px;
-  margin-bottom:10px;
-  font-size:13px;
-  font-weight:700;
-}
-.initial-todo-toggle input{flex:0 0 auto}
-.initial-todo-example{margin-top:7px;color:var(--muted);font-size:10px;line-height:1.55}
-.initial-todo-card.editing-hidden{display:none}
 .spine[data-generated="true"]{flex-shrink:0}
 @media(max-width:430px){.plan-tab{font-size:12px;padding-inline:3px}.date-fields input{font-size:12px;padding-inline:5px}}
 
@@ -1599,7 +1603,11 @@ nav button.active{color:var(--accent);font-weight:700}
 </section>
 
 <section class="screen" id="register">
-  <div class="section-title" style="margin-top:0"><h3 id="registerScreenTitle">教材登録</h3><span class="small" id="registerScreenSub">実際の教材を登録</span></div><div class="edit-mode-banner" id="editModeBanner">登録済み教材を編集中です。保存すると内容と計画が更新されます。</div>
+  <div class="register-head">
+    <button class="register-back-button" type="button" onclick="leaveRegistration()">← <span class="registerBackLabel">登録せず戻る</span></button>
+    <div class="section-title"><h3 id="registerScreenTitle">教材登録</h3><span class="small" id="registerScreenSub">実際の教材を登録</span></div>
+  </div>
+  <div class="edit-mode-banner" id="editModeBanner">登録済み教材を編集中です。保存すると内容と計画が更新されます。</div>
   <div class="form-card compact-image-card">
     <h3>画像</h3>
     <div class="compact-image-grid">
@@ -1651,37 +1659,17 @@ nav button.active{color:var(--accent);font-weight:700}
       <div class="field"><label>管理単位</label><input id="materialUnit" maxlength="20" value="" placeholder="例：問、ページ、プリント、Lesson" oninput="recalculatePlan()"></div>
     </div>
     <div class="inline">
-      <div class="field"><label>総数</label><input id="materialTotal" type="number" min="1" value="" placeholder="例：364" oninput="syncRemainingAmount();recalculatePlan()"></div>
-      <div class="field"><label>残り</label><input id="materialRemaining" type="number" min="0" value="" placeholder="途中登録にも対応" oninput="remainingWasAuto=false;recalculatePlan()"><div class="remaining-note">途中から登録する場合は、現在残っている問題数・ページ数・単語数などを入力してください。</div></div>
+      <div class="field"><label>総数</label><input id="materialTotal" type="number" min="1" value="" placeholder="例：364" oninput="syncWorkStartBounds();recalculatePlan()"></div>
+      <div class="field"><label>この教材のどこから取り組みますか？</label><input id="materialWorkStart" type="number" min="1" value="1" placeholder="例：71" oninput="recalculatePlan()"><div class="work-start-note" id="workStartNote">新しく始める教材は「1」のままで構いません。</div></div>
     </div>
     <div class="serial-number-settings">
       <label class="serial-number-toggle"><input id="showSerialNumber" type="checkbox" onchange="syncSerialNumberUI()">通番を表示する</label>
-      <div class="field" id="startNumberField"><label>開始番号</label><input id="startNumber" type="number" min="1" value="1" disabled></div>
+      <div class="field" id="startNumberField"><label>教材の最初の通番</label><input id="startNumber" type="number" min="1" value="1" disabled oninput="syncWorkStartBounds();recalculatePlan()"></div>
     </div>
-    <div class="serial-number-note">教材の番号が「51、52…」のように途中から始まる場合にONにし、開始番号へ「51」と入力します。TODOにも51番から表示されます。通常はOFFのままで構いません。</div>
+    <div class="serial-number-note">教材自体が「51、52…」のように途中の通番から始まる場合だけONにします。通常はOFFのままで構いません。</div>
     <div class="date-fields" style="margin-top:14px">
       <div class="field"><label>取り組み開始日</label><input id="startDate" type="date" value="" onchange="recalculatePlan()"></div>
       <div class="field"><label>終了目標日（任意）</label><input id="targetDate" type="date" value="" onchange="recalculatePlan()"></div>
-    </div>
-  </div>
-  <div class="form-card initial-todo-card" id="initialTodoSetupCard">
-    <h3>途中から登録するときの初回TODO</h3>
-    <p class="settings-note">新しい教材を最初から始める場合は空欄で構いません。ここで指定した内容は登録日のTODOにだけ反映されます。</p>
-    <div class="initial-todo-fields">
-      <div class="field">
-        <label for="initialTodoStartNumber">今日の予定の開始番号</label>
-        <input id="initialTodoStartNumber" type="number" min="1" placeholder="例：71">
-        <div class="initial-todo-example">1日の量が5なら、71を入力すると71〜75を今日の予定にします。</div>
-      </div>
-      <div class="initial-todo-carryover">
-        <label class="initial-todo-toggle"><input id="includeInitialCarryover" type="checkbox" onchange="syncInitialTodoSetupUI()">前日までの未消化分を加える</label>
-        <div class="field" style="margin:0">
-          <label for="initialCarryoverNumbers">積み残し番号</label>
-          <input id="initialCarryoverNumbers" type="text" inputmode="numeric" placeholder="例：67,68,69" disabled>
-        </div>
-        <div class="initial-todo-example">カンマ区切りまたは「67〜69」のような範囲で入力できます。クリアライン未達として今日の予定より前に表示します。</div>
-        <div class="initial-todo-example">不正解だった問題を積み残す場合は、下の「今日のクリアライン」を「自力で解けた」に設定してください。</div>
-      </div>
     </div>
   </div>
   <div class="form-card study-type-card">
@@ -1808,7 +1796,13 @@ nav button.active{color:var(--accent);font-weight:700}
     </div>
 
   </div>
-  <div class="register-actions"><button class="secondary-btn" type="button" onclick="clearRegistrationForm()">入力をクリア</button><button class="primary" id="registerSubmitButton" type="button" onclick="registerMaterial()">この内容で登録する</button></div>
+  <div class="register-actions">
+    <div class="register-save-actions">
+      <button class="primary" id="registerSubmitButton" type="button" onclick="registerMaterial(false)">この内容で登録する</button>
+      <button class="primary register-progress-button" id="registerProgressButton" type="button" onclick="registerMaterial(true)">登録して進捗の詳細入力へ</button>
+    </div>
+    <button class="secondary-btn register-cancel-button" type="button" onclick="leaveRegistration()"><span class="registerBackLabel">登録せず戻る</span></button>
+  </div>
   <div class="material-data-management" id="materialDataManagement">
     <h3>教材データ管理</h3>
     <p>教材設定を残したまま進捗を初期化できます。教材の削除は設定・進捗・TODO履歴・保存画像をすべて削除します。</p>
@@ -1927,15 +1921,56 @@ const englishNums=[11,12,13,14,15];
 const saved=JSON.parse(localStorage.getItem("mieruStudySample")||"{}");
 const states=saved.states||{};
 const english=saved.english||{};
+let registrationBaseline="";
 
 function save(){localStorage.setItem("mieruStudySample",JSON.stringify({states,english}))}
-function go(id){
+function registrationSnapshot(){
+  const screen=document.getElementById("register");
+  if(!screen)return"";
+  const fields=Array.from(screen.querySelectorAll("input,select,textarea")).map(field=>({
+    id:field.id||field.name||field.type,
+    value:field.value,
+    checked:"checked" in field?field.checked:undefined
+  }));
+  return JSON.stringify({
+    fields,
+    selectedSpineTone,
+    selectedPlanMode,
+    selectedStudyType,
+    selectedTodoPolicy,
+    selectedIntervalMode,
+    materialImageData,
+    motivationImageData
+  });
+}
+function markRegistrationBaseline(){registrationBaseline=registrationSnapshot()}
+function registrationHasUnsavedChanges(){
+  return document.getElementById("register")?.classList.contains("active")&&registrationSnapshot()!==registrationBaseline;
+}
+function confirmLeaveRegistration(){
+  if(!registrationHasUnsavedChanges())return true;
+  return confirm(editingMaterialId?"変更内容を保存せずに戻りますか？":"入力内容を保存せずに戻りますか？");
+}
+function leaveRegistration(){go("home")}
+function go(id,skipRegistrationGuard=false){
+  const leavingRegister=document.getElementById("register")?.classList.contains("active")&&id!=="register";
+  if(leavingRegister&&!skipRegistrationGuard){
+    if(!confirmLeaveRegistration())return false;
+    clearRegistrationForm();
+  }
   document.querySelectorAll(".screen").forEach(x=>x.classList.toggle("active",x.id===id));
   document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x.dataset.target===id));
   scrollTo({top:0,behavior:"smooth"});
 
   if(id==="todo")renderTodayTodos();
+  if(id==="register"&&!editingMaterialId)requestAnimationFrame(markRegistrationBaseline);
+  return true;
 }
+window.addEventListener("beforeunload",event=>{
+  if(!registrationHasUnsavedChanges())return;
+  event.preventDefault();
+  event.returnValue="";
+});
 function bookshelfSettings(){var c=prompt('本箱タイプを選択\n・ナチュラル\n・ウォールナット\n・ホワイト\n・ブラック','ナチュラル');if(c)toast('本箱を「'+c+'」に変更（サンプル）');}
 function toast(msg){
   const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");
@@ -2242,7 +2277,7 @@ const SUBJECT_BASE_COLORS={"国語":"#F7C6D6","数学":"#B8DDF3","英語":"#D6C6
 const MATERIALS_KEY="mieruStudyMaterialsV1";
 const MATERIAL_PROGRESS_KEY_V32="mieruStudyProgressV32";
 const MATERIAL_PROGRESS_FIELDS_V32=["progress","remaining","completedAmount","completed","itemDetails","learningHistory","studyHistory","history"];
-let selectedSpineTone="basic",selectedPlanMode="daily",materialImageData="",motivationImageData="",remainingWasAuto=true;
+let selectedSpineTone="basic",selectedPlanMode="daily",materialImageData="",motivationImageData="";
 function loadMaterials(){
   try{
     const settings=JSON.parse(localStorage.getItem(MATERIALS_KEY)||"[]")||[];
@@ -2374,8 +2409,33 @@ function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x}
 function daysBetween(a,b){return Math.floor((b-a)/86400000)}
 function formatJaDate(d){return!d||isNaN(d)?"算出できません":`${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`}
 function currentUnit(){return document.getElementById("materialUnit").value||"単位"}
-function remainingTotal(){const t=Math.max(0,+document.getElementById("materialTotal").value||0),v=document.getElementById("materialRemaining").value;return v===""?t:Math.max(0,Math.min(t,+v||0))}
-function syncRemainingAmount(){const t=document.getElementById("materialTotal").value,r=document.getElementById("materialRemaining");if(remainingWasAuto||r.value===""){r.value=t;remainingWasAuto=true}}
+function serialBaseFromForm(){return document.getElementById("showSerialNumber")?.checked?Math.max(1,+document.getElementById("startNumber")?.value||1):1}
+function workStartIndexFromForm(){
+  const total=Math.max(0,+document.getElementById("materialTotal")?.value||0);
+  const first=serialBaseFromForm();
+  const value=+document.getElementById("materialWorkStart")?.value||first;
+  return Math.max(0,Math.min(Math.max(0,total-1),value-first));
+}
+function remainingTotal(){
+  const total=Math.max(0,+document.getElementById("materialTotal")?.value||0);
+  return total?Math.max(0,total-workStartIndexFromForm()):0;
+}
+function syncWorkStartBounds(){
+  const input=document.getElementById("materialWorkStart");
+  if(!input)return;
+  const total=Math.max(0,+document.getElementById("materialTotal")?.value||0);
+  const first=serialBaseFromForm();
+  const last=total?first+total-1:first;
+  input.min=String(first);
+  if(total)input.max=String(last);else input.removeAttribute("max");
+  const current=+input.value||0;
+  if(current<first)input.value=String(first);
+  else if(total&&current>last)input.value=String(last);
+  const note=document.getElementById("workStartNote");
+  if(note)note.textContent=input.disabled
+    ?"登録後の位置やチェック状態は「進捗の詳細入力」から変更できます。"
+    :first===1?"新しく始める教材は「1」のままで構いません。":`新しく始める教材は「${first}」のままで構いません。`;
+}
 function goalComparison(f){const t=parseLocalDate(document.getElementById("targetDate").value);if(!t||!f)return{text:"終了目標日は未設定です。",cls:""};const d=daysBetween(t,f);return d===0?{text:"終了目標日どおりです。",cls:"on-time"}:d<0?{text:`目標より${Math.abs(d)}日早く終了予定です。`,cls:"early"}:{text:`目標より${d}日遅れる予定です。`,cls:"late"}}
 function setResult(el,f,extra=""){if(!f){el.className="calculation-status";el.innerHTML=`<strong>終了予定日：未算出</strong>${extra||"必要な項目を入力してください。"}`;return}const c=goalComparison(f);el.className="calculation-status "+c.cls;el.innerHTML=`<strong>終了予定日：${formatJaDate(f)}</strong>${c.text}${extra?`<br>${extra}`:""}`}
 function selectPlanMode(btn){
@@ -2442,25 +2502,44 @@ function recalculatePlan(){recalculateDaily(true);recalculateWeekly();recalculat
 function syncSerialNumberUI(){
   const enabled=!!document.getElementById("showSerialNumber")?.checked;
   const input=document.getElementById("startNumber");
+  const field=document.getElementById("startNumberField");
   if(input){input.disabled=!enabled;if(enabled&&(+input.value||0)<1)input.value="1"}
+  if(field)field.classList.toggle("active",enabled);
+  syncWorkStartBounds();
 }
-function syncInitialTodoSetupUI(){
-  const enabled=!!document.getElementById("includeInitialCarryover")?.checked;
-  const input=document.getElementById("initialCarryoverNumbers");
-  if(input)input.disabled=!enabled;
+function clearRegistrationForm(){
+  exitEditMode();
+  ["materialSubject","materialTitle","materialPublisher","paperSize","materialUnit","materialTotal","targetDate","dailyAmount","newDays","reviewDays","bufferEvery","bufferDays","dailyNewAmount"].forEach(id=>{
+    const field=document.getElementById(id);if(field)field.value="";
+  });
+  document.getElementById("materialWorkStart").value="1";
+  document.getElementById("materialWorkStart").disabled=false;
+  document.getElementById("startDate").value=todayISO();
+  document.querySelectorAll(".weekday-amount").forEach(x=>x.value="");
+  document.getElementById("showSerialNumber").checked=false;
+  document.getElementById("startNumber").value="1";
+  syncSerialNumberUI();
+  selectedSpineTone="basic";
+  selectedPlanMode="daily";
+  document.querySelectorAll(".tone-button").forEach(x=>x.classList.toggle("active",x.dataset.tone==="basic"));
+  document.querySelectorAll(".plan-tab").forEach(x=>x.classList.toggle("active",x.dataset.plan==="daily"));
+  ["daily","weekly","interval"].forEach(m=>document.getElementById(m+"PlanPane").classList.toggle("active",m==="daily"));
+  materialImageData="";
+  motivationImageData="";
+  const i=document.getElementById("materialImage");i.src="";i.style.display="none";
+  document.getElementById("materialImagePlaceholder").style.display="block";
+  document.getElementById("materialImageInput").value="";
+  const mi=document.getElementById("motivationImage");mi.src="";mi.style.display="none";
+  document.getElementById("motivationImagePlaceholder").style.display="block";
+  document.getElementById("motivationImageInput").value="";
+  const openOrder=document.getElementById("registrationOpenOrder");if(openOrder)openOrder.value="row";
+  resetStudyTypeForm();
+  resetTodoPolicy();
+  resetIntervalMode();
+  updateSpinePreview();
+  recalculatePlan();
+  markRegistrationBaseline();
 }
-function clearRegistrationForm(){exitEditMode();["materialSubject","materialTitle","materialPublisher","paperSize","materialUnit","materialTotal","materialRemaining","targetDate","dailyAmount","newDays","reviewDays","bufferEvery","bufferDays","dailyNewAmount","initialTodoStartNumber","initialCarryoverNumbers"].forEach(id=>document.getElementById(id).value="");document.getElementById("startDate").value=todayISO();document.querySelectorAll(".weekday-amount").forEach(x=>x.value="");document.getElementById("showSerialNumber").checked=false;document.getElementById("startNumber").value="1";document.getElementById("includeInitialCarryover").checked=false;syncSerialNumberUI();syncInitialTodoSetupUI();selectedSpineTone="basic";selectedPlanMode="daily";document.querySelectorAll(".tone-button").forEach(x=>x.classList.toggle("active",x.dataset.tone==="basic"));document.querySelectorAll(".plan-tab").forEach(x=>x.classList.toggle("active",x.dataset.plan==="daily"));["daily","weekly","interval"].forEach(m=>document.getElementById(m+"PlanPane").classList.toggle("active",m==="daily"));materialImageData="";motivationImageData="";
-const i=document.getElementById("materialImage");i.src="";i.style.display="none";
-document.getElementById("materialImagePlaceholder").style.display="block";
-document.getElementById("materialImageInput").value="";
-const mi=document.getElementById("motivationImage");mi.src="";mi.style.display="none";
-document.getElementById("motivationImagePlaceholder").style.display="block";
-document.getElementById("motivationImageInput").value="";
-const openOrder=document.getElementById("registrationOpenOrder");if(openOrder)openOrder.value="row";
-resetStudyTypeForm();
-resetTodoPolicy();
-resetIntervalMode();
-remainingWasAuto=true;updateSpinePreview();recalculatePlan()}
 function sizeClass(s){return s==="A4"?"size-a4":s==="A5"?"size-a5":"size-b5"}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function planName(m){return m==="daily"?"毎日":m==="weekly"?"週ごとの計画":"インターバル"}
@@ -2535,6 +2614,13 @@ function compressNumberRanges(indices){
 function materialDisplayNumberV32(item,index){
   const start=item?.showSerialNumber?Math.max(1,+item.startNumber||1):1;
   return start+index;
+}
+function materialWorkStartIndexV34(item){
+  const total=Math.max(0,+item?.total||0);
+  if(!total)return 0;
+  if(Number.isInteger(+item.workStartIndex))return Math.max(0,Math.min(total-1,+item.workStartIndex));
+  const remaining=Math.max(0,Math.min(total,+item.remaining||0));
+  return Math.max(0,Math.min(total-1,total-remaining));
 }
 function compressNumberRangesForMaterialV32(indices,item){
   if(!indices.length)return "";
@@ -2859,104 +2945,21 @@ function pruneMaterialTodosV32(materialId,total,item){
   }).filter(todo=>todo.materialId!==materialId||todo.adjustment||!Array.isArray(todo.indices)||todo.indices.length>0);
   return saveSharedTodos(todos);
 }
-function normalizeInitialNumberTextV33(value){
-  return String(value||"")
-    .replace(/[０-９]/g,char=>String(char.charCodeAt(0)-65248))
-    .replace(/[、，]/g,",")
-    .replace(/[－―ー−]/g,"-")
-    .replace(/\s+/g,",")
-    .replace(/,+/g,",")
-    .replace(/^,|,$/g,"");
-}
-function parseInitialNumberListV33(value){
-  const normalized=normalizeInitialNumberTextV33(value);
-  if(!normalized)return [];
-  const numbers=[];
-  for(const token of normalized.split(",")){
-    const match=token.match(/^(\d+)(?:[-~〜](\d+))?$/);
-    if(!match)return null;
-    const first=+match[1],last=match[2]?+match[2]:first;
-    if(first<=0||last<=0||Math.abs(last-first)>5000)return null;
-    const step=first<=last?1:-1;
-    for(let number=first;;number+=step){
-      numbers.push(number);
-      if(number===last)break;
-    }
-  }
-  return [...new Set(numbers)];
-}
 function displayNumberToIndexV33(item,displayNumber){
   const first=item.showSerialNumber?Math.max(1,+item.startNumber||1):1;
   const index=(+displayNumber||0)-first;
   return Number.isInteger(index)&&index>=0&&index<Math.max(0,+item.total||0)?index:-1;
 }
-function collectInitialTodoSetupV33(item){
-  const startValue=document.getElementById("initialTodoStartNumber")?.value.trim()||"";
-  const includeCarryover=!!document.getElementById("includeInitialCarryover")?.checked;
-  const carryText=document.getElementById("initialCarryoverNumbers")?.value||"";
-  if(!startValue&&!includeCarryover)return null;
-
-  const carryNumbers=includeCarryover?parseInitialNumberListV33(carryText):[];
-  if(includeCarryover&&carryNumbers===null)return{error:"積み残し番号は「67,68,69」または「67〜69」の形式で入力してください"};
-  if(includeCarryover&&!carryNumbers.length)return{error:"積み残し番号を入力してください"};
-
-  const carryIndices=[];
-  for(const number of carryNumbers||[]){
-    const index=displayNumberToIndexV33(item,number);
-    if(index<0)return{error:`積み残し番号 ${number} は教材の登録範囲外です`};
-    carryIndices.push(index);
-  }
-
-  let scheduledIndices=[];
-  if(startValue){
-    const startNumber=+startValue;
-    const startIndex=displayNumberToIndexV33(item,startNumber);
-    if(startIndex<0)return{error:`今日の開始番号 ${startValue} は教材の登録範囲外です`};
-    const today=new Date();
-    today.setHours(0,0,0,0);
-    const base=baseAmountForToday(item,today);
-    const amount=Math.max(0,typeof base==="object"?+base.amount||0:+base||0);
-    if(amount<=0)return{error:"今日の計画量が0です。計画方法または1日の量を確認してください"};
-    scheduledIndices=Array.from({length:Math.min(amount,Math.max(0,item.total-startIndex))},(_,offset)=>startIndex+offset);
-  }
-
-  const indices=[...new Set([...carryIndices,...scheduledIndices])];
-  if(!indices.length)return null;
-  return{indices,carryoverIndices:[...new Set(carryIndices)]};
-}
-function saveInitialTodoSetupV33(item,setup){
-  if(!setup?.indices?.length)return true;
-  const today=new Date();
-  today.setHours(0,0,0,0);
-  const date=localDateKey(today);
-  const requiredStage=materialTodoClearStageV32(item)||1;
-  const todo={
-    id:`${date}:${item.id}`,
-    date,
-    source:"MIERU_STUDY",
-    schemaVersion:TODO_SCHEMA_VERSION_V31,
-    materialId:item.id,
-    title:item.title,
-    subject:item.subject,
-    unit:item.unit,
-    indices:setup.indices,
-    requiredStages:setup.indices.map(()=>requiredStage),
-    carryoverIndices:setup.carryoverIndices,
-    rangeText:compressNumberRangesForMaterialV32(setup.indices,item),
-    phase:"standard",
-    initialSetup:true,
-    completed:false
-  };
-  const other=loadSharedTodos().filter(saved=>!(saved.date===date&&saved.source==="MIERU_STUDY"&&saved.materialId===item.id));
-  return saveSharedTodos([...other,todo]);
-}
-function registerMaterial(){
+function registerMaterial(openProgressAfterSave=false){
   const subject=document.getElementById("materialSubject").value;
   const title=document.getElementById("materialTitle").value.trim();
   const paperSize=document.getElementById("paperSize").value;
   const unit=document.getElementById("materialUnit").value.trim();
   const total=+document.getElementById("materialTotal").value||0;
-  const remaining=remainingTotal();
+  const showSerialNumber=!!document.getElementById("showSerialNumber").checked;
+  const startNumber=showSerialNumber?Math.max(1,+document.getElementById("startNumber").value||1):1;
+  const workStartNumber=+document.getElementById("materialWorkStart").value||0;
+  const workStartIndex=workStartNumber-startNumber;
   const startDate=document.getElementById("startDate").value;
 
   if(!subject)return toast("教科を選択してください");
@@ -2964,6 +2967,10 @@ function registerMaterial(){
   if(!paperSize)return toast("用紙サイズを選択してください");
   if(!unit)return toast("管理単位を入力してください");
   if(total<=0)return toast("総数を入力してください");
+  if(!Number.isInteger(workStartNumber)||workStartIndex<0||workStartIndex>=total){
+    const last=startNumber+total-1;
+    return toast(`取り組み開始位置は${startNumber}〜${last}の範囲で入力してください`);
+  }
   if(!startDate)return toast("取り組み開始日を入力してください");
 
   const items=loadMaterials();
@@ -2982,10 +2989,10 @@ function registerMaterial(){
     id:existing?existing.id:"m"+Date.now(),
     subject,title,
     publisher:document.getElementById("materialPublisher").value.trim(),
-    paperSize,unit,total,remaining,
-    completedAmount:total-remaining,
-    showSerialNumber:!!document.getElementById("showSerialNumber").checked,
-    startNumber:Math.max(1,+document.getElementById("startNumber").value||1),
+    paperSize,unit,total,
+    showSerialNumber,
+    startNumber,
+    workStartIndex,
     startDate,
     targetDate:document.getElementById("targetDate").value,
     tone:selectedSpineTone,
@@ -3005,13 +3012,16 @@ function registerMaterial(){
     updatedAt:new Date().toISOString()
   };
 
-  const initialTodoSetup=existing?null:collectInitialTodoSetupV33(item);
-  if(initialTodoSetup?.error)return toast(initialTodoSetup.error);
-
-  if(existing&&Array.isArray(existing.progress)){
+  if(existing){
     const maxStage=Math.max(1,progressStageLabels(item).length);
-    item.progress=existing.progress.slice(0,total).map(stage=>Math.max(0,Math.min(maxStage,+stage||0)));
+    item.progress=materialProgressV31(existing).slice(0,total).map(stage=>Math.max(0,Math.min(maxStage,+stage||0)));
     while(item.progress.length<total)item.progress.push(0);
+    item.remaining=remainingFromProgressV31(item,item.progress);
+    item.completedAmount=Math.max(0,total-item.remaining);
+  }else{
+    const initialStage=Math.min(Math.max(1,progressStageLabels(item).length),materialTodoClearStageV32(item)||1);
+    item.progress=Array(total).fill(0);
+    for(let index=0;index<workStartIndex;index++)item.progress[index]=initialStage;
     item.remaining=remainingFromProgressV31(item,item.progress);
     item.completedAmount=Math.max(0,total-item.remaining);
   }
@@ -3041,19 +3051,19 @@ function registerMaterial(){
     toast("保存できませんでした。ブラウザの保存領域を確認してください");
     return;
   }
-  if(initialTodoSetup&&!saveInitialTodoSetupV33(item,initialTodoSetup)){
-    toast("教材は保存しましたが、初回TODOを保存できませんでした");
-  }
   if(totalReduced&&!pruneMaterialTodosV32(item.id,total,item)){
     toast("教材は保存しましたが、過去のTODO範囲を更新できませんでした");
   }
 
   const wasEditing=!!editingMaterialId;
-  exitEditMode();
   renderRegisteredMaterials();
   renderMaterialEditList();
-  go("home");
   clearRegistrationForm();
+  if(openProgressAfterSave){
+    openProgressPage(item.id,Math.max(0,workStartIndex-10),true);
+  }else{
+    go("home",true);
+  }
   requestAnimationFrame(renderRegisteredMaterials);
   setTimeout(()=>toast(wasEditing?`「${title}」を更新しました`:`「${title}」を登録しました`),50);
 }
@@ -3131,7 +3141,8 @@ function startEditMaterial(id){
   document.getElementById("registerScreenSub").textContent="内容と計画を変更";
   document.getElementById("editModeBanner").classList.add("show");
   document.getElementById("registerSubmitButton").textContent="変更を保存する";
-  document.getElementById("initialTodoSetupCard")?.classList.add("editing-hidden");
+  document.getElementById("registerProgressButton").textContent="変更を保存して進捗へ";
+  document.querySelectorAll(".registerBackLabel").forEach(label=>label.textContent="変更せず戻る");
 
   document.getElementById("materialSubject").value=item.subject||"";
   document.getElementById("materialTitle").value=item.title||"";
@@ -3139,10 +3150,12 @@ function startEditMaterial(id){
   document.getElementById("paperSize").value=item.paperSize||"";
   document.getElementById("materialUnit").value=item.unit||"";
   document.getElementById("materialTotal").value=item.total||"";
-  document.getElementById("materialRemaining").value=item.remaining??"";
   document.getElementById("showSerialNumber").checked=item.showSerialNumber===true;
   document.getElementById("startNumber").value=Math.max(1,+item.startNumber||1);
+  document.getElementById("materialWorkStart").value=materialDisplayNumberV32(item,materialWorkStartIndexV34(item));
+  document.getElementById("materialWorkStart").disabled=true;
   syncSerialNumberUI();
+  document.getElementById("workStartNote").textContent="登録後の位置やチェック状態は「進捗の詳細入力」から変更できます。";
   document.getElementById("startDate").value=item.startDate||todayISO();
   document.getElementById("targetDate").value=item.targetDate||"";
   loadStudyTypeSettings(item);
@@ -3194,11 +3207,11 @@ function startEditMaterial(id){
     motivationImg.src="";motivationImg.style.display="none";motivationPlaceholder.style.display="block";
   }
 
-  remainingWasAuto=false;
   document.getElementById("materialDataManagement")?.classList.add("show");
   updateSpinePreview();
   updatePreview();
   recalculatePlan();
+  markRegistrationBaseline();
 }
 function exitEditMode(){
   editingMaterialId=null;
@@ -3206,14 +3219,15 @@ function exitEditMode(){
   const sub=document.getElementById("registerScreenSub");
   const banner=document.getElementById("editModeBanner");
   const btn=document.getElementById("registerSubmitButton");
+  const progressBtn=document.getElementById("registerProgressButton");
   const management=document.getElementById("materialDataManagement");
-  const initialTodoSetup=document.getElementById("initialTodoSetupCard");
   if(title)title.textContent="教材登録";
   if(sub)sub.textContent="実際の教材を登録";
   if(banner)banner.classList.remove("show");
   if(btn)btn.textContent="この内容で登録する";
+  if(progressBtn)progressBtn.textContent="登録して進捗の詳細入力へ";
+  document.querySelectorAll(".registerBackLabel").forEach(label=>label.textContent="登録せず戻る");
   if(management)management.classList.remove("show");
-  if(initialTodoSetup)initialTodoSetup.classList.remove("editing-hidden");
 }
 function resetEditingMaterialProgress(){
   if(!editingMaterialId){toast("編集する教材を選択してください");return}
@@ -3223,6 +3237,7 @@ function resetEditingMaterialProgress(){
   const item=items[index];
   if(!confirm("この教材の進捗・学習履歴・TODO達成状況・復習指定・メモをすべてリセットします。教材の登録情報は残ります。"))return;
   item.progress=Array(Math.max(0,+item.total||0)).fill(0);
+  item.workStartIndex=0;
   item.remaining=Math.max(0,+item.total||0);
   item.completedAmount=0;
   item.completed=false;
@@ -3235,7 +3250,7 @@ function resetEditingMaterialProgress(){
   if(!saveMaterials(items)){toast("進捗をリセットできませんでした");return}
   saveSharedTodos(loadSharedTodos().filter(todo=>todo.materialId!==item.id));
   if(currentProgressMaterialId===item.id)workingProgress=item.progress.slice();
-  document.getElementById("materialRemaining").value=item.remaining;
+  document.getElementById("materialWorkStart").value=materialDisplayNumberV32(item,0);
   renderRegisteredMaterials();
   renderMaterialEditList();
   toast(`「${item.title}」の進捗をリセットしました`);
@@ -3289,7 +3304,7 @@ function migrateProgressOpenOrderV24(item){
   return converted;
 }
 
-function openProgressPage(id){
+function openProgressPage(id,focusIndex=null,openDetails=false){
   const item=loadMaterials().find(x=>x.id===id);
   if(!item){toast("教材が見つかりません");return}
   currentProgressMaterialId=id;
@@ -3298,8 +3313,20 @@ function openProgressPage(id){
   currentProgressOpenOrder=item.progressOpenOrder||"row";
   document.getElementById("showMaterialImageButton").classList.add("active");
   document.getElementById("showMotivationImageButton").classList.remove("active");
-  go("progress");
+  go("progress",openDetails);
   renderProgressPage();
+  if(focusIndex!==null&&Number.isInteger(+focusIndex)){
+    const safeIndex=Math.max(0,Math.min(Math.max(0,(+item.total||0)-1),+focusIndex));
+    document.getElementById("progressPageSelect").value=String(Math.floor(safeIndex/PROGRESS_PAGE_SIZE));
+    renderProgressRows();
+  }
+  if(openDetails){
+    const details=document.querySelector("#progress .progress-controls");
+    if(details){
+      details.open=true;
+      requestAnimationFrame(()=>details.scrollIntoView({behavior:"smooth",block:"start"}));
+    }
+  }
 }
 function editCurrentProgressMaterial(){
   if(!currentProgressMaterialId){toast("教材が見つかりません");return}
@@ -3341,6 +3368,12 @@ function configureProgressStageUI(item){
   const labels=progressStageLabels(item);
   const bulk=document.getElementById("bulkStage");
   bulk.innerHTML='<option value="0">未着手</option>'+labels.map((label,i)=>`<option value="${i+1}">${esc(label)}</option>`).join("");
+  const first=materialDisplayNumberV32(item,0);
+  const last=materialDisplayNumberV32(item,Math.max(0,(+item.total||0)-1));
+  [document.getElementById("bulkStart"),document.getElementById("bulkEnd")].forEach(input=>{
+    input.min=String(first);
+    input.max=String(last);
+  });
 }
 
 function estimateFinishDateForProgress(item){
@@ -3395,22 +3428,23 @@ function renderProgressPage(){
   document.getElementById("progressMaterialTitle").textContent=item.title;
   document.getElementById("progressMaterialMeta").textContent=`${item.subject}／残り${item.remaining}${item.unit}／終了予定日 ${formatProgressFinishDate(item)}`;
   configureProgressStageUI(item);
-  buildProgressPageSelect(item.total);
+  buildProgressPageSelect(item);
   renderProgressImage();
   renderProgressRows();
   updateProgressSummary();
 }
-function buildProgressPageSelect(total){
+function buildProgressPageSelect(item){
   const select=document.getElementById("progressPageSelect");
+  const total=Math.max(0,+item.total||0);
   const pageCount=Math.max(1,Math.ceil(total/PROGRESS_PAGE_SIZE));
   const previous=Math.min(select.selectedIndex, pageCount-1);
   select.innerHTML="";
   for(let p=0;p<pageCount;p++){
-    const start=p*PROGRESS_PAGE_SIZE+1;
-    const end=Math.min(total,(p+1)*PROGRESS_PAGE_SIZE);
+    const startIndex=p*PROGRESS_PAGE_SIZE;
+    const endIndex=Math.max(startIndex,Math.min(total,(p+1)*PROGRESS_PAGE_SIZE)-1);
     const option=document.createElement("option");
     option.value=String(p);
-    option.textContent=`${start}〜${end}`;
+    option.textContent=`${materialDisplayNumberV32(item,startIndex)}〜${materialDisplayNumberV32(item,endIndex)}`;
     select.appendChild(option);
   }
   select.selectedIndex=Math.max(0,previous);
@@ -3548,7 +3582,7 @@ function renderProgressRows(){
       const level=index+1;
       return `<button type="button" class="${stage>=level?"active":""}" aria-label="${label}" title="${label}" onclick="setProgressStage(${i},${level})">${level}</button>`;
     }).join("");
-    rows+=`<div class="progress-row"><div class="progress-row-label">${i+1}${item.unit}</div><div class="progress-stage-buttons">${buttons}</div></div>`;
+    rows+=`<div class="progress-row"><div class="progress-row-label">${materialDisplayNumberV32(item,i)}${item.unit}</div><div class="progress-stage-buttons">${buttons}</div></div>`;
   }
   host.innerHTML=rows;
 }
@@ -3564,18 +3598,23 @@ function setProgressStage(index,level){
 function applyBulkProgress(){
   const item=currentProgressMaterial();
   if(!item)return;
-  let start=Math.max(1,+document.getElementById("bulkStart").value||1);
-  let end=Math.min(item.total,+document.getElementById("bulkEnd").value||item.total);
-  if(end<start)[start,end]=[end,start];
+  const firstDisplay=materialDisplayNumberV32(item,0);
+  const lastDisplay=materialDisplayNumberV32(item,Math.max(0,(+item.total||0)-1));
+  let startDisplay=+document.getElementById("bulkStart").value||firstDisplay;
+  let endDisplay=+document.getElementById("bulkEnd").value||lastDisplay;
+  if(endDisplay<startDisplay)[startDisplay,endDisplay]=[endDisplay,startDisplay];
+  const start=displayNumberToIndexV33(item,startDisplay);
+  const end=displayNumberToIndexV33(item,endDisplay);
+  if(start<0||end<0)return toast(`範囲は${firstDisplay}〜${lastDisplay}で入力してください`);
   const maxStage=Math.max(1,progressStageLabels(item).length);
   const stage=Math.max(0,Math.min(maxStage,+document.getElementById("bulkStage").value||0));
-  for(let i=start-1;i<end;i++)workingProgress[i]=stage;
-  const page=Math.floor((start-1)/PROGRESS_PAGE_SIZE);
+  for(let i=start;i<=end;i++)workingProgress[i]=stage;
+  const page=Math.floor(start/PROGRESS_PAGE_SIZE);
   document.getElementById("progressPageSelect").value=String(page);
   renderProgressRows();
   renderProgressImage();
   updateProgressSummary();
-  toast(`${start}〜${end}${item.unit}を更新しました`);
+  toast(`${startDisplay}〜${endDisplay}${item.unit}を更新しました`);
 }
 function updateProgressSummary(){
   const item=currentProgressMaterial();
@@ -3616,6 +3655,7 @@ function saveProgressChanges(){
   renderRegisteredMaterials();
   renderMaterialEditList();
   renderProgressPage();
+  renderTodayTodos();
   toast("進捗を保存しました");
 }
 
@@ -3767,7 +3807,9 @@ function buildTodayTodoForMaterialV31(item,today,excludedIndices=[]){
   }
 
   if(!candidates.length)return null;
-  const amount=deadlineAmountForToday(item,Math.max(1,amountBase),today,candidates.length);
+  const reservedCount=item.todoPolicy==="deadline"?excluded.size:0;
+  const plannedAmount=deadlineAmountForToday(item,Math.max(1,amountBase),today,candidates.length+reservedCount);
+  const amount=item.todoPolicy==="deadline"?Math.max(0,plannedAmount-reservedCount):plannedAmount;
   const indices=phase==="review"
     ?[...reviewIndices,...candidates.filter(index=>!reviewIndices.includes(index)).slice(0,Math.max(0,amount-reviewIndices.length))]
     :candidates.slice(0,amount);
@@ -3829,6 +3871,13 @@ function collectCarryoverV32(item,saved,today){
   const progress=materialProgressV31(item);
   const clearStage=materialTodoClearStageV32(item);
   const requiredByIndex=new Map();
+  if(Number.isInteger(+item.workStartIndex)){
+    const workStartIndex=Math.max(0,Math.min(total,+item.workStartIndex));
+    const registrationClearStage=clearStage||1;
+    for(let index=0;index<workStartIndex;index++){
+      if((progress[index]||0)<registrationClearStage)requiredByIndex.set(index,registrationClearStage);
+    }
+  }
   saved.filter(todo=>todo.source==="MIERU_STUDY"&&todo.materialId===item.id&&todo.date<date&&!todo.adjustment&&Array.isArray(todo.indices))
     .sort((a,b)=>String(a.date).localeCompare(String(b.date)))
     .forEach(todo=>todo.indices.forEach((rawIndex,position)=>{
@@ -3886,7 +3935,7 @@ function loadTodayTodosV31(active,today){
 
   active.forEach(item=>{
     const carry=collectCarryoverV32(item,saved,today);
-    const generated=buildTodayTodoForMaterialV31(item,today,item.todoPolicy==="deadline"?[]:carry.indices);
+    const generated=buildTodayTodoForMaterialV31(item,today,carry.indices);
     const old=previous.get(item.id);
     let current=generated?mergeExistingTodayTodoV31(old,generated,item):old||null;
     if(current&&!current.adjustment){
