@@ -1231,6 +1231,144 @@ input[type=checkbox]:disabled{opacity:.35}
   line-height:1.6;
 }
 
+/* v0.31 問題別に直接チェックできる今日のTODO */
+.todo-group.todo-v31{
+  overflow:hidden;
+  opacity:1;
+}
+.todo-group.todo-v31.completed{
+  opacity:1;
+}
+.todo-v31 .todo-head{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:12px;
+  align-items:start;
+  padding:15px 16px 12px;
+}
+.todo-v31 .todo-head h3{
+  margin:0;
+  font-size:16px;
+  line-height:1.45;
+}
+.todo-v31-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px 12px;
+  margin-top:6px;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.45;
+}
+.todo-v31-meta span{
+  white-space:nowrap;
+}
+.todo-v31-status{
+  align-self:center;
+  padding:6px 9px;
+  border-radius:999px;
+  background:#eef3f6;
+  color:#6f8797;
+  font-size:10px;
+  font-weight:800;
+  white-space:nowrap;
+}
+.todo-v31.completed .todo-v31-status{
+  background:#edf5ee;
+  color:#64856b;
+}
+.todo-stage-legend{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px 12px;
+  padding:9px 16px;
+  border-top:1px solid #eee9e4;
+  background:#fbfaf8;
+  color:#736c67;
+  font-size:10px;
+}
+.todo-stage-legend span{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+}
+.todo-stage-legend i{
+  display:grid;
+  place-items:center;
+  width:17px;
+  height:17px;
+  border-radius:50%;
+  background:var(--accent2);
+  color:#567d98;
+  font-style:normal;
+  font-size:9px;
+  font-weight:800;
+}
+.todo-v31-items{
+  border-top:1px solid var(--line);
+}
+.todo-v31-row{
+  display:grid;
+  grid-template-columns:minmax(64px,auto) minmax(0,1fr);
+  gap:14px;
+  align-items:center;
+  min-height:52px;
+  padding:9px 16px;
+  border-bottom:1px solid #eee9e4;
+  background:#fff;
+}
+.todo-v31-row:last-child{
+  border-bottom:0;
+}
+.todo-v31-number{
+  display:flex;
+  align-items:baseline;
+  gap:4px;
+  color:var(--ink);
+}
+.todo-v31-number strong{
+  font-size:15px;
+  font-variant-numeric:tabular-nums;
+}
+.todo-v31-number small{
+  color:var(--muted);
+  font-size:9px;
+}
+.todo-stage-checks{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+}
+.todo-stage-check-label{
+  display:grid;
+  justify-items:center;
+  gap:2px;
+  color:var(--muted);
+  font-size:8px;
+}
+input.todo-stage-check{
+  width:28px;
+  height:28px;
+  margin:0;
+  border-radius:8px;
+  cursor:pointer;
+}
+.todo-v31-foot{
+  padding:9px 16px 11px;
+  border-top:1px solid #eee9e4;
+  background:#fbfaf8;
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.5;
+}
+@media(max-width:430px){
+  .todo-v31 .todo-head{grid-template-columns:minmax(0,1fr)}
+  .todo-v31-status{justify-self:start}
+  .todo-v31-row{grid-template-columns:minmax(50px,auto) minmax(0,1fr);padding-inline:13px}
+  .todo-stage-checks{gap:8px}
+  input.todo-stage-check{width:27px;height:27px}
+}
+
 nav{
   position:fixed;z-index:50;bottom:0;left:0;right:0;
   display:grid;grid-template-columns:repeat(4,1fr);
@@ -1381,10 +1519,6 @@ nav button.active{color:var(--accent);font-weight:700}
         </select>
       </div>
       <div class="mastery-label-grid" id="masteryLabelGrid"></div>
-      <div class="field compact-field">
-        <label for="masteryClearStage">クリアライン</label>
-        <select id="masteryClearStage"></select>
-      </div>
     </div>
 
     <div class="study-type-settings" id="cycleSettings">
@@ -2866,6 +3000,314 @@ function saveProgressChanges(){
   renderMaterialEditList();
   renderProgressPage();
   toast("進捗を保存しました");
+}
+
+/* v0.31 問題別TODOと進捗の即時連携 */
+const TODO_SCHEMA_VERSION_V31=31;
+
+function materialProgressV31(item){
+  const values=materialProgress(item);
+  const total=Math.max(0,+item.total||0);
+  const remaining=Math.max(0,Math.min(total,+item.remaining||0));
+  const alreadyStarted=Math.max(0,total-remaining);
+  if(alreadyStarted>0&&!values.some(v=>v>0)){
+    for(let i=0;i<alreadyStarted&&i<values.length;i++)values[i]=1;
+  }
+  return values;
+}
+
+function normalizeProgress(item){
+  return materialProgressV31(item);
+}
+
+function todoPhaseLabelV31(item,todo){
+  if(todo.adjustment)return "調整日";
+  const type=inferStudyType(item);
+  if(type==="cycle"){
+    const stage=Math.max(1,+todo.requiredStages?.[0]||1);
+    return progressStageLabels(item)[stage-1]||`${stage}周目`;
+  }
+  if(todo.phase==="review")return "復習日";
+  if(type==="completion")return "取り組む日";
+  return "新しい問題に取り組む日";
+}
+
+function buildTodayTodoForMaterialV31(item,today){
+  const start=parseLocalDate(item.startDate);
+  if(start&&today<start)return null;
+
+  const progress=materialProgressV31(item);
+  const labels=progressStageLabels(item);
+  const maxStage=Math.max(1,labels.length);
+  const baseInfo=baseAmountForToday(item,today);
+  const amountBase=typeof baseInfo==="object"?baseInfo.amount:baseInfo;
+  const phase=typeof baseInfo==="object"?baseInfo.phase:"standard";
+  const date=localDateKey(today);
+
+  if(phase==="adjustment"){
+    return {
+      id:`${date}:${item.id}`,
+      date,
+      source:"MIERU_STUDY",
+      schemaVersion:TODO_SCHEMA_VERSION_V31,
+      materialId:item.id,
+      title:item.title,
+      subject:item.subject,
+      unit:item.unit,
+      adjustment:true,
+      completed:false
+    };
+  }
+  if(amountBase<=0)return null;
+
+  const type=inferStudyType(item);
+  let candidates=[];
+  let requiredStageForIndex=()=>1;
+
+  if(type==="cycle"){
+    const unfinished=progress.map((stage,index)=>({stage,index})).filter(x=>x.stage<maxStage);
+    if(!unfinished.length)return null;
+    const currentRound=Math.min(...unfinished.map(x=>x.stage));
+    candidates=unfinished.filter(x=>x.stage===currentRound).map(x=>x.index);
+    requiredStageForIndex=()=>Math.min(maxStage,currentRound+1);
+  }else if(type==="mastery"&&phase==="review"){
+    candidates=progress.map((stage,index)=>({stage,index}))
+      .filter(x=>x.stage>0&&x.stage<maxStage)
+      .map(x=>x.index);
+    requiredStageForIndex=index=>Math.min(maxStage,(progress[index]||0)+1);
+  }else{
+    candidates=progress.map((stage,index)=>({stage,index}))
+      .filter(x=>x.stage===0)
+      .map(x=>x.index);
+    requiredStageForIndex=()=>1;
+  }
+
+  if(!candidates.length)return null;
+  const amount=deadlineAmountForToday(item,amountBase,today,candidates.length);
+  const indices=candidates.slice(0,amount);
+  if(!indices.length)return null;
+
+  return {
+    id:`${date}:${item.id}`,
+    date,
+    source:"MIERU_STUDY",
+    schemaVersion:TODO_SCHEMA_VERSION_V31,
+    materialId:item.id,
+    title:item.title,
+    subject:item.subject,
+    unit:item.unit,
+    indices,
+    requiredStages:indices.map(requiredStageForIndex),
+    rangeText:compressNumberRanges(indices),
+    phase,
+    completed:false
+  };
+}
+
+function mergeExistingTodayTodoV31(existing,generated,item){
+  if(!existing)return generated;
+  if(existing.adjustment||generated.adjustment)return generated;
+
+  const total=Math.max(0,+item.total||0);
+  const indices=Array.isArray(existing.indices)
+    ?[...new Set(existing.indices.map(Number).filter(i=>Number.isInteger(i)&&i>=0&&i<total))]
+    :[];
+  if(!indices.length)return generated;
+
+  const maxStage=Math.max(1,progressStageLabels(item).length);
+  let requiredStages=[];
+  if(Array.isArray(existing.requiredStages)&&existing.requiredStages.length===indices.length){
+    requiredStages=existing.requiredStages.map(v=>Math.max(1,Math.min(maxStage,+v||1)));
+  }else if(existing.phase==="review"){
+    const stage=Math.max(1,Math.min(maxStage,+existing.targetStage||maxStage));
+    requiredStages=indices.map(()=>stage);
+  }else if(inferStudyType(item)==="cycle"){
+    const stage=Math.max(1,Math.min(maxStage,+existing.targetStage||1));
+    requiredStages=indices.map(()=>stage);
+  }else{
+    requiredStages=indices.map(()=>1);
+  }
+
+  return {
+    ...existing,
+    ...generated,
+    id:`${generated.date}:${item.id}`,
+    schemaVersion:TODO_SCHEMA_VERSION_V31,
+    indices,
+    requiredStages,
+    rangeText:compressNumberRanges(indices),
+    completedAt:existing.completedAt||null
+  };
+}
+
+function loadTodayTodosV31(active,today){
+  const date=localDateKey(today);
+  const saved=loadSharedTodos();
+  const previous=new Map(
+    saved.filter(x=>x.date===date&&x.source==="MIERU_STUDY"&&x.materialId)
+      .map(x=>[x.materialId,x])
+  );
+  const todos=[];
+
+  active.forEach(item=>{
+    const generated=buildTodayTodoForMaterialV31(item,today);
+    if(!generated)return;
+    todos.push(mergeExistingTodayTodoV31(previous.get(item.id),generated,item));
+  });
+
+  const other=saved.filter(x=>x.date!==date||x.source!=="MIERU_STUDY");
+  saveSharedTodos([...other,...todos]);
+  return todos;
+}
+
+function todoIsCompleteV31(todo,progress){
+  if(todo.adjustment)return false;
+  const required=Array.isArray(todo.requiredStages)?todo.requiredStages:[];
+  return todo.indices.every((index,position)=>(progress[index]||0)>=(required[position]||1));
+}
+
+function remainingFromProgressV31(item,progress){
+  if(inferStudyType(item)==="cycle"){
+    const lastStage=Math.max(1,progressStageLabels(item).length);
+    return progress.filter(stage=>(+stage||0)<lastStage).length;
+  }
+  return progress.filter(stage=>(+stage||0)<1).length;
+}
+
+function changeTodoStageV31(materialId,itemIndex,stage,checked){
+  const materials=loadMaterials();
+  const materialIndex=materials.findIndex(item=>item.id===materialId);
+  if(materialIndex<0)return;
+
+  const item=materials[materialIndex];
+  const progress=materialProgressV31(item);
+  const maxStage=Math.max(1,progressStageLabels(item).length);
+  const level=Math.max(1,Math.min(maxStage,+stage||1));
+  const current=Math.max(0,Math.min(maxStage,+progress[itemIndex]||0));
+
+  progress[itemIndex]=checked
+    ?Math.max(current,level)
+    :Math.min(current,level-1);
+
+  item.progress=progress;
+  item.remaining=remainingFromProgressV31(item,progress);
+  item.completedAmount=Math.max(0,(+item.total||0)-item.remaining);
+  item.updatedAt=new Date().toISOString();
+  materials[materialIndex]=item;
+  if(!saveMaterials(materials)){
+    toast("進捗を保存できませんでした");
+    return;
+  }
+
+  if(currentProgressMaterialId===materialId)workingProgress=progress.slice();
+  renderRegisteredMaterials();
+  renderMaterialEditList();
+}
+
+function renderTodoCardV31(todo,item){
+  const progress=materialProgressV31(item);
+  const labels=progressStageLabels(item);
+  const complete=todoIsCompleteV31(todo,progress);
+  const required=todo.requiredStages||[];
+  const unfinished=todo.indices.filter((index,position)=>(progress[index]||0)<(required[position]||1)).length;
+  const finish=formatProgressFinishDate(item);
+  const legend=labels.map((label,index)=>`<span><i>${index+1}</i>${esc(label)}</span>`).join("");
+  const rows=todo.indices.map(index=>{
+    const current=Math.max(0,Math.min(labels.length,+progress[index]||0));
+    const checks=labels.map((label,stageIndex)=>{
+      const level=stageIndex+1;
+      return `<label class="todo-stage-check-label">
+        <input class="todo-stage-check" type="checkbox" ${current>=level?"checked":""}
+          aria-label="${index+1}${esc(item.unit)} ${esc(label)}"
+          title="${esc(label)}"
+          onchange="changeTodoStageV31('${item.id}',${index},${level},this.checked)">
+        <span>${level}</span>
+      </label>`;
+    }).join("");
+    return `<div class="todo-v31-row">
+      <div class="todo-v31-number"><strong>${index+1}</strong><small>${esc(item.unit)}</small></div>
+      <div class="todo-stage-checks">${checks}</div>
+    </div>`;
+  }).join("");
+
+  return `<div class="todo-group todo-v31 ${complete?"completed":""}">
+    <div class="todo-head">
+      <div>
+        <h3>${esc(item.title)}</h3>
+        <div class="todo-v31-meta">
+          <span>${esc(item.subject)}</span>
+          <span>${esc(todoPhaseLabelV31(item,todo))}</span>
+          <span>残り ${item.remaining}${esc(item.unit)}</span>
+          <span>終了予定日 ${esc(finish)}</span>
+        </div>
+      </div>
+      <div class="todo-v31-status">${complete?"今日の最低ライン完了":`あと${unfinished}項目`}</div>
+    </div>
+    <div class="todo-stage-legend">${legend}</div>
+    <div class="todo-v31-items">${rows}</div>
+    <div class="todo-v31-foot">チェックはそのまま進捗へ保存されます。新規日でも、できた段階まで自由にチェックできます。</div>
+  </div>`;
+}
+
+function renderTodayTodos(){
+  const today=new Date();
+  today.setHours(0,0,0,0);
+  const active=loadMaterials().filter(item=>!item.completed);
+  const materialMap=new Map(active.map(item=>[item.id,item]));
+  const todos=loadTodayTodosV31(active,today);
+  const date=localDateKey(today);
+
+  todos.forEach(todo=>{
+    const item=materialMap.get(todo.materialId);
+    if(!item||todo.adjustment)return;
+    const complete=todoIsCompleteV31(todo,materialProgressV31(item));
+    if(complete&&!todo.completedAt)todo.completedAt=new Date().toISOString();
+    if(!complete)todo.completedAt=null;
+    todo.completed=complete;
+  });
+  const savedOther=loadSharedTodos().filter(x=>x.date!==date||x.source!=="MIERU_STUDY");
+  saveSharedTodos([...savedOther,...todos]);
+
+  const host=document.getElementById("registeredTodoList");
+  const countLabel=document.getElementById("todoCountLabel");
+  const headline=document.getElementById("homeTodoHeadline");
+  const summary=document.getElementById("homeTodoSummary");
+  const dateLabel=document.getElementById("homeDateLabel");
+  if(dateLabel)dateLabel.textContent=japaneseDateLabel(today);
+
+  const actionable=todos.filter(todo=>!todo.adjustment);
+  const remaining=actionable.filter(todo=>!todo.completed);
+  const remainingUnits=remaining.reduce((sum,todo)=>sum+todo.indices.filter((index,position)=>{
+    const item=materialMap.get(todo.materialId);
+    if(!item)return false;
+    return (materialProgressV31(item)[index]||0)<(todo.requiredStages?.[position]||1);
+  }).length,0);
+
+  if(countLabel)countLabel.textContent=`${remaining.length}件`;
+  if(headline)headline.textContent=remaining.length?`あと${remainingUnits}項目`:"今日の予定は完了";
+  if(summary){
+    if(remaining.length){
+      summary.textContent=remaining.map(todo=>`${todo.subject} ${todo.rangeText}${todo.unit}`).join("・");
+    }else if(todos.some(todo=>todo.adjustment)){
+      summary.textContent="調整日です。自由に学習を調整できます";
+    }else{
+      summary.textContent="おつかれさまでした";
+    }
+  }
+
+  if(!todos.length){
+    host.innerHTML='<div class="empty-list">今日のTODOはありません。</div>';
+    return;
+  }
+
+  host.innerHTML='<div class="today-todo-note">今日取り組む項目を、できた段階まで直接チェックできます。</div>'+todos.map(todo=>{
+    const item=materialMap.get(todo.materialId);
+    if(!item)return "";
+    if(todo.adjustment){
+      return `<div class="todo-group"><div class="todo-head"><h3>${esc(item.title)}</h3><p>${esc(item.subject)}・調整日</p></div><div class="todo-adjustment">今日は調整日です。遅れの回収、追加復習、先取りなどに自由に使えます。</div></div>`;
+    }
+    return renderTodoCardV31(todo,item);
+  }).join("");
 }
 
 </script>
