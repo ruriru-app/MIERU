@@ -1349,8 +1349,33 @@ input[type=checkbox]:disabled{opacity:.35}
   font-size:10px;
   line-height:1.55;
 }
+.ahead-policy-block{
+  margin-top:14px;
+  padding-top:14px;
+  border-top:1px dashed var(--line);
+}
+.ahead-policy-options{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+}
+.ahead-policy-button{
+  appearance:none;
+  min-width:0;
+  border:1px solid #cbc4bd;
+  border-radius:12px;
+  background:#fff;
+  color:var(--ink);
+  padding:10px 8px;
+  text-align:left;
+}
+.ahead-policy-button strong{display:block;margin-bottom:4px;font-size:12px}
+.ahead-policy-button span{display:block;color:var(--muted);font-size:9px;line-height:1.5}
+.ahead-policy-button.active{border-color:var(--accent);background:var(--accent2);color:#496f89}
+.ahead-policy-button.active span{color:#6389a2}
 @media(max-width:430px){
   .todo-policy-options{grid-template-columns:1fr}
+  .ahead-policy-options{grid-template-columns:1fr}
 }
 
 
@@ -1583,6 +1608,51 @@ input[type=checkbox]:disabled{opacity:.35}
   border-color:var(--accent);
   color:#fff;
 }
+.future-todo-section{border-top:1px solid var(--line);background:#fbfaf8}
+.future-todo-toggle{
+  width:100%;border:0;background:transparent;color:#547c98;padding:11px 14px;
+  text-align:left;font-size:12px;font-weight:800;
+}
+.future-todo-panel{padding:0 12px 12px}
+.future-mode-heading{margin:0 0 7px;color:var(--muted);font-size:10px;font-weight:700}
+.future-mode-options{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}
+.future-mode-button{
+  border:1px solid #d2cbc5;border-radius:10px;background:#fff;color:#6f675f;
+  padding:8px 7px;font-size:10px;font-weight:700;text-align:center;
+}
+.future-mode-button.active{border-color:var(--accent);background:var(--accent2);color:#547c98}
+.future-mode-help{margin:-3px 2px 10px;color:var(--muted);font-size:9px;line-height:1.5}
+.future-day-card{margin-top:8px;border:1px solid #e2dcd6;border-radius:12px;background:#fff;overflow:hidden}
+.future-day-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;background:#f7f5f2}
+.future-day-head strong{font-size:11px}
+.future-day-head span{color:var(--muted);font-size:9px}
+.future-day-note{padding:11px;color:var(--muted);font-size:10px;line-height:1.55}
+.future-more-button{
+  width:100%;margin-top:9px;border:1px solid var(--accent);border-radius:10px;
+  background:#fff;color:#547c98;padding:9px;font-size:11px;font-weight:800;
+}
+.review-builder{
+  padding:12px 14px;border-top:1px solid var(--line);background:#fffaf3;
+}
+.review-builder h4{margin:0 0 4px;font-size:13px}
+.review-builder > p{margin:0 0 10px;color:var(--muted);font-size:10px;line-height:1.5}
+.review-choice-list{display:grid;gap:7px}
+.review-choice{
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;
+  min-height:38px;padding:7px 9px;border:1px solid #e2d8cb;border-radius:10px;background:#fff;
+  font-size:11px;
+}
+.review-choice input{width:18px;height:18px;margin:0}
+.review-choice span:last-child{color:var(--muted);font-size:10px;white-space:nowrap}
+.review-choice.disabled{opacity:.45}
+.review-create-button{
+  width:100%;margin-top:10px;border:0;border-radius:11px;background:var(--accent);
+  color:#fff;padding:10px;font-size:11px;font-weight:800;
+}
+.review-add-details{border-top:1px solid var(--line);background:#fffaf3}
+.review-add-details > summary{cursor:pointer;list-style:none;padding:10px 14px;color:#547c98;font-size:11px;font-weight:800}
+.review-add-details > summary::-webkit-details-marker{display:none}
+.review-add-details .review-builder{border-top:0;padding-top:2px}
 @media(max-width:430px){
   .todo-v31 .todo-head{grid-template-columns:minmax(0,1fr)}
   .todo-v31-status{justify-self:start}
@@ -1590,6 +1660,7 @@ input[type=checkbox]:disabled{opacity:.35}
   .todo-stage-checks{gap:7px}
   .todo-stage-button{width:26px;height:26px}
   .todo-v31-tool{width:26px;height:26px}
+  .future-mode-options{grid-template-columns:1fr}
 }
 
 nav{
@@ -1841,6 +1912,20 @@ nav button.active{color:var(--accent);font-weight:700}
       <div class="todo-policy-note">
         調整日は方針に含めず、遅れの回収・追加復習・先取りなどに自由に使います。
       </div>
+      <div class="ahead-policy-block">
+        <div class="todo-policy-heading">予定より先に進めた分の扱い</div>
+        <div class="ahead-policy-options">
+          <button type="button" class="ahead-policy-button active" data-ahead-policy="ask" onclick="selectAheadPolicy('ask')">
+            <strong>先取り時に選ぶ</strong><span>明日以降のTODOを開いたときに選択します。</span>
+          </button>
+          <button type="button" class="ahead-policy-button" data-ahead-policy="keep" onclick="selectAheadPolicy('keep')">
+            <strong>予定日を残す</strong><span>後日にゆとりを作り、予定日は動かしません。</span>
+          </button>
+          <button type="button" class="ahead-policy-button" data-ahead-policy="advance" onclick="selectAheadPolicy('advance')">
+            <strong>終了を前倒し</strong><span>取り組んだ分だけ以降のTODOを前へ詰めます。</span>
+          </button>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -1984,6 +2069,7 @@ function registrationSnapshot(){
     selectedPlanMode,
     selectedStudyType,
     selectedTodoPolicy,
+    selectedAheadPolicy,
     selectedIntervalMode,
     materialImageData,
     motivationImageData
@@ -2032,6 +2118,7 @@ function updatePreview(){
 
 let selectedStudyType="mastery";
 let selectedTodoPolicy="amount";
+let selectedAheadPolicy="ask";
 let selectedIntervalMode="continuous";
 
 
@@ -2039,6 +2126,12 @@ function selectTodoPolicy(policy){
   selectedTodoPolicy=policy==="deadline"?"deadline":"amount";
   document.querySelectorAll(".todo-policy-button").forEach(btn=>{
     btn.classList.toggle("active",btn.dataset.policy===selectedTodoPolicy);
+  });
+}
+function selectAheadPolicy(policy){
+  selectedAheadPolicy=["keep","advance"].includes(policy)?policy:"ask";
+  document.querySelectorAll(".ahead-policy-button").forEach(button=>{
+    button.classList.toggle("active",button.dataset.aheadPolicy===selectedAheadPolicy);
   });
 }
 function intervalWeekdayRolesFromForm(){
@@ -2062,9 +2155,11 @@ function resetIntervalMode(){
 }
 function resetTodoPolicy(){
   selectTodoPolicy("amount");
+  selectAheadPolicy("ask");
 }
 function loadTodoPolicy(item){
   selectTodoPolicy(item.todoPolicy||"amount");
+  selectAheadPolicy(item.aheadPolicy||"ask");
 }
 
 const STUDY_TYPE_TEXT={
@@ -2975,13 +3070,15 @@ function pruneMaterialTodosV32(materialId,total,item){
   const todos=loadSharedTodos().map(todo=>{
     if(todo.materialId!==materialId||!Array.isArray(todo.indices))return todo;
     const required=Array.isArray(todo.requiredStages)?todo.requiredStages:[];
-    const pairs=todo.indices.map((rawIndex,position)=>({index:+rawIndex,stage:required[position]}))
+    const reviewStarts=Array.isArray(todo.reviewStartStages)?todo.reviewStartStages:[];
+    const pairs=todo.indices.map((rawIndex,position)=>({index:+rawIndex,stage:required[position],reviewStart:reviewStarts[position]}))
       .filter(entry=>Number.isInteger(entry.index)&&entry.index>=0&&entry.index<limit);
     const indices=pairs.map(entry=>entry.index);
     return {
       ...todo,
       indices,
       requiredStages:pairs.map(entry=>Math.max(1,+entry.stage||1)),
+      reviewStartStages:pairs.map(entry=>Math.max(0,+entry.reviewStart||0)),
       reviewIndices:Array.isArray(todo.reviewIndices)
         ?todo.reviewIndices.map(Number).filter(index=>Number.isInteger(index)&&index>=0&&index<limit)
         :[],
@@ -3051,6 +3148,7 @@ function registerMaterial(openProgressAfterSave=false){
     checkLabels:getRegistrationCheckLabels(),
     todoClearStage:selectedStudyType==="cycle"?0:Math.max(1,+document.getElementById("todoClearStage").value||1),
     todoPolicy:selectedTodoPolicy,
+    aheadPolicy:selectedAheadPolicy,
     cycleCount:selectedStudyType==="cycle"?getRegistrationCheckLabels().length:null,
     checkType:getRegistrationCheckLabels().length,
     planMode:selectedPlanMode,
@@ -3727,6 +3825,8 @@ function saveProgressChanges(){
 
 /* v0.31 問題別TODOと進捗の即時連携 */
 const TODO_SCHEMA_VERSION_V31=31;
+const futureTodoDaysV35=new Map();
+const futureTodoModeV35=new Map();
 
 function materialProgressV31(item){
   const values=materialProgress(item);
@@ -3816,6 +3916,123 @@ function todoPhaseLabelV31(item,todo){
   return "新しい問題に取り組む日";
 }
 
+function reviewScopeIndicesV35(item,dateKey){
+  const saved=loadSharedTodos()
+    .filter(todo=>todo.source==="MIERU_STUDY"&&todo.materialId===item.id&&todo.date<dateKey&&!todo.adjustment&&todo.aheadMode!=="advance"&&Array.isArray(todo.indices))
+    .sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+  const previousReview=[...saved].reverse().find(todo=>todo.phase==="review");
+  const boundary=previousReview?.date||"";
+  let scope=saved.filter(todo=>todo.date>boundary&&todo.phase!=="review").flatMap(todo=>todo.indices.map(Number));
+  if(!scope.length){
+    const latest=[...saved].reverse().find(todo=>todo.phase!=="review"&&todo.indices.length);
+    scope=latest?latest.indices.map(Number):[];
+  }
+  if(!scope.length){
+    const progress=materialProgressV31(item);
+    const plan=item.plan||{};
+    const amount=Math.max(1,+plan.dailyNewAmount||1);
+    const newDayCount=plan.intervalMode==="weekday"
+      ?Math.max(1,Object.values(plan.intervalWeekdays||{}).filter(role=>role==="new").length)
+      :Math.max(1,+plan.newDays||1);
+    const worked=progress.map((stage,index)=>({stage,index})).filter(entry=>entry.stage>0).map(entry=>entry.index);
+    scope=worked.slice(-Math.max(1,amount*newDayCount));
+  }
+  const total=Math.max(0,+item.total||0);
+  return [...new Set(scope.filter(index=>Number.isInteger(index)&&index>=0&&index<total))].sort((a,b)=>a-b);
+}
+function reviewChoiceCandidatesV35(item,dateKey=localDateKey()){
+  const scope=reviewScopeIndicesV35(item,dateKey);
+  const progress=materialProgressV31(item);
+  const maxStage=Math.max(1,progressStageLabels(item).length);
+  const stages={};
+  for(let level=1;level<maxStage;level++)stages[level]=scope.filter(index=>(progress[index]||0)===level);
+  return {scope,stages,review:reviewRequestedIndicesV32(item)};
+}
+function renderReviewSelectorV35(item,todo,isAdd=false){
+  const labels=progressStageLabels(item);
+  const candidates=reviewChoiceCandidatesV35(item,todo.date);
+  const stageOptions=labels.slice(0,-1).map((label,index)=>{
+    const level=index+1,count=candidates.stages[level]?.length||0;
+    return `<label class="review-choice ${count?"":"disabled"}"><input class="review-choice-input" type="checkbox" data-choice="stage:${level}" ${count?"":"disabled"}><span>${level}段目「${esc(label)}」の問題</span><span>${count}問</span></label>`;
+  }).join("");
+  const reviewCount=candidates.review.length;
+  const allCount=candidates.scope.length;
+  return `<div class="review-builder" id="reviewBuilder-${item.id}" data-review-builder="${item.id}">
+    <h4>${isAdd?"復習する問題を追加":"復習TODOを作成"}</h4>
+    <p>取り組む問題を選択してください。複数選択できます。</p>
+    <div class="review-choice-list">
+      ${stageOptions}
+      <label class="review-choice ${reviewCount?"":"disabled"}"><input class="review-choice-input" type="checkbox" data-choice="review" ${reviewCount?"":"disabled"}><span>↻を付けた問題</span><span>${reviewCount}問</span></label>
+      <label class="review-choice ${allCount?"":"disabled"}"><input class="review-choice-input" type="checkbox" data-choice="all" ${allCount?"":"disabled"}><span>今回の範囲すべて</span><span>${allCount}問</span></label>
+    </div>
+    <button class="review-create-button" type="button" onclick="createOrAddReviewTodoV35('${item.id}')">${isAdd?"選んだ問題を追加":"選んだ内容で復習TODOを作る"}</button>
+  </div>`;
+}
+function createOrAddReviewTodoV35(materialId){
+  const item=loadMaterials().find(material=>material.id===materialId);
+  const builder=document.getElementById(`reviewBuilder-${materialId}`);
+  if(!item||!builder)return;
+  const selected=[...builder.querySelectorAll(".review-choice-input:checked")].map(input=>input.dataset.choice);
+  if(!selected.length){toast("復習する問題を選択してください");return}
+  const date=localDateKey();
+  const candidates=reviewChoiceCandidatesV35(item,date);
+  const selectedIndices=[];
+  selected.forEach(choice=>{
+    if(choice==="review")selectedIndices.push(...candidates.review);
+    else if(choice==="all")selectedIndices.push(...candidates.scope);
+    else if(choice.startsWith("stage:"))selectedIndices.push(...(candidates.stages[+choice.split(":")[1]]||[]));
+  });
+  const additions=[...new Set(selectedIndices)].sort((a,b)=>a-b);
+  if(!additions.length){toast("追加できる問題がありません");return}
+
+  const todos=loadSharedTodos();
+  let todoIndex=todos.findIndex(todo=>todo.source==="MIERU_STUDY"&&todo.materialId===materialId&&todo.date===date);
+  let todo=todoIndex>=0?{...todos[todoIndex]}:buildTodayTodoForMaterialV31(item,new Date(),[]);
+  if(!todo)return;
+  const wasCreated=todo.reviewSelectionCreated===true;
+  const existingIndices=Array.isArray(todo.indices)?todo.indices.map(Number):[];
+  const existingRequired=Array.isArray(todo.requiredStages)?todo.requiredStages:[];
+  const progress=materialProgressV31(item);
+  const requiredByIndex=new Map(existingIndices.map((index,position)=>[index,requiredStageForSavedTodoV32(todo,position,item)]));
+  const existingReviewStarts=Array.isArray(todo.reviewStartStages)?todo.reviewStartStages:[];
+  const reviewStartByIndex=new Map(existingIndices.map((index,position)=>[index,Math.max(0,+existingReviewStarts[position]||+progress[index]||0)]));
+  const maxStage=Math.max(1,progressStageLabels(item).length);
+  additions.forEach(index=>{
+    if(!requiredByIndex.has(index))requiredByIndex.set(index,Math.min(maxStage,Math.max(1,(progress[index]||0)+1)));
+    if(!reviewStartByIndex.has(index))reviewStartByIndex.set(index,Math.max(0,+progress[index]||0));
+  });
+  const indices=[...new Set([...existingIndices,...additions])].sort((a,b)=>a-b);
+  const selectedReview=selected.includes("review")?new Set(candidates.review):new Set();
+  const reviewIndices=[...new Set([...(todo.reviewIndices||[]).map(Number),...indices.filter(index=>selectedReview.has(index))])];
+  todo={
+    ...todo,
+    id:`${date}:${item.id}`,
+    date,
+    source:"MIERU_STUDY",
+    schemaVersion:TODO_SCHEMA_VERSION_V31,
+    materialId:item.id,
+    title:item.title,
+    subject:item.subject,
+    unit:item.unit,
+    phase:"review",
+    adjustment:false,
+    reviewBuilder:false,
+    reviewSelectionCreated:true,
+    futurePreview:false,
+    indices,
+    requiredStages:indices.map(index=>requiredByIndex.get(index)||1),
+    reviewStartStages:indices.map(index=>reviewStartByIndex.get(index)||0),
+    reviewIndices,
+    rangeText:compressNumberRangesForMaterialV32(indices,item),
+    completed:false,
+    completedAt:null
+  };
+  if(todoIndex>=0)todos[todoIndex]=todo;else todos.push(todo);
+  if(!saveSharedTodos(todos)){toast("復習TODOを保存できませんでした");return}
+  renderTodayTodos();
+  toast(wasCreated?"復習する問題を追加しました":"復習TODOを作成しました");
+}
+
 function buildTodayTodoForMaterialV31(item,today,excludedIndices=[]){
   const start=parseLocalDate(item.startDate);
   if(start&&today<start)return null;
@@ -3852,13 +4069,23 @@ function buildTodayTodoForMaterialV31(item,today,excludedIndices=[]){
   let reviewIndices=[];
 
   if(phase==="review"){
-    reviewIndices=reviewRequestedIndicesV32(item);
-    const requestedSet=new Set(reviewIndices);
-    const automatic=progress.map((stage,index)=>({stage,index}))
-      .filter(entry=>clearStage>0&&entry.stage>0&&entry.stage<clearStage&&!excluded.has(entry.index)&&!requestedSet.has(entry.index))
-      .map(entry=>entry.index);
-    candidates=[...reviewIndices,...automatic];
-    requiredStageForIndex=index=>clearStage>0?clearStage:Math.max(1,progress[index]||1);
+    return {
+      id:`${date}:${item.id}`,
+      date,
+      source:"MIERU_STUDY",
+      schemaVersion:TODO_SCHEMA_VERSION_V31,
+      materialId:item.id,
+      title:item.title,
+      subject:item.subject,
+      unit:item.unit,
+      phase:"review",
+      reviewBuilder:true,
+      reviewSelectionCreated:false,
+      indices:[],
+      requiredStages:[],
+      reviewIndices:[],
+      completed:false
+    };
   }else if(type==="cycle"){
     const unfinished=progress.map((stage,index)=>({stage,index})).filter(x=>x.stage<maxStage);
     if(!unfinished.length)return null;
@@ -3876,9 +4103,7 @@ function buildTodayTodoForMaterialV31(item,today,excludedIndices=[]){
   const reservedCount=item.todoPolicy==="deadline"?excluded.size:0;
   const plannedAmount=deadlineAmountForToday(item,Math.max(1,amountBase),today,candidates.length+reservedCount);
   const amount=item.todoPolicy==="deadline"?Math.max(0,plannedAmount-reservedCount):plannedAmount;
-  const indices=phase==="review"
-    ?[...reviewIndices,...candidates.filter(index=>!reviewIndices.includes(index)).slice(0,Math.max(0,amount-reviewIndices.length))]
-    :candidates.slice(0,amount);
+  const indices=candidates.slice(0,amount);
   if(!indices.length)return null;
 
   return {
@@ -3901,6 +4126,30 @@ function buildTodayTodoForMaterialV31(item,today,excludedIndices=[]){
 
 function mergeExistingTodayTodoV31(existing,generated,item){
   if(!existing)return generated;
+  if(generated.reviewBuilder&&existing.phase==="review"){
+    const total=Math.max(0,+item.total||0);
+    const indices=Array.isArray(existing.indices)
+      ?[...new Set(existing.indices.map(Number).filter(index=>Number.isInteger(index)&&index>=0&&index<total))]
+      :[];
+    const legacyCreated=existing.reviewBuilder!==true&&indices.length>0;
+    if(existing.reviewSelectionCreated===true||legacyCreated){
+      return {
+        ...generated,
+        ...existing,
+        id:`${generated.date}:${item.id}`,
+        date:generated.date,
+        title:item.title,
+        subject:item.subject,
+        unit:item.unit,
+        reviewBuilder:false,
+        reviewSelectionCreated:true,
+        indices,
+        requiredStages:indices.map((_,position)=>requiredStageForSavedTodoV32(existing,position,item)),
+        reviewStartStages:indices.map((_,position)=>Math.max(0,+existing.reviewStartStages?.[position]||0)),
+        rangeText:compressNumberRangesForMaterialV32(indices,item)
+      };
+    }
+  }
   if(existing.adjustment||generated.adjustment)return generated;
 
   const total=Math.max(0,+item.total||0);
@@ -3944,7 +4193,7 @@ function collectCarryoverV32(item,saved,today){
       if((progress[index]||0)<registrationClearStage)requiredByIndex.set(index,registrationClearStage);
     }
   }
-  saved.filter(todo=>todo.source==="MIERU_STUDY"&&todo.materialId===item.id&&todo.date<date&&!todo.adjustment&&Array.isArray(todo.indices))
+  saved.filter(todo=>todo.source==="MIERU_STUDY"&&todo.materialId===item.id&&todo.date<date&&!todo.adjustment&&!(todo.futurePreview&&todo.aheadMode==="advance")&&Array.isArray(todo.indices))
     .sort((a,b)=>String(a.date).localeCompare(String(b.date)))
     .forEach(todo=>todo.indices.forEach((rawIndex,position)=>{
       const index=+rawIndex;
@@ -3994,7 +4243,7 @@ function loadTodayTodosV31(active,today){
   const date=localDateKey(today);
   const saved=loadSharedTodos();
   const previous=new Map(
-    saved.filter(x=>x.date===date&&x.source==="MIERU_STUDY"&&x.materialId)
+    saved.filter(x=>x.date===date&&x.source==="MIERU_STUDY"&&x.materialId&&!(x.futurePreview&&x.aheadMode==="advance"))
       .map(x=>[x.materialId,x])
   );
   const todos=[];
@@ -4017,12 +4266,20 @@ function loadTodayTodosV31(active,today){
 }
 
 function todoItemIsCompleteV32(todo,index,position,progress,item){
-  const stageComplete=(progress[index]||0)>=(todo.requiredStages?.[position]||1);
+  const maxStage=Math.max(1,progressStageLabels(item).length);
+  const reviewStart=todo.phase==="review"&&todo.reviewSelectionCreated===true&&Array.isArray(todo.reviewStartStages)
+    ?Math.max(0,+todo.reviewStartStages[position]||0)
+    :null;
+  const required=reviewStart==null
+    ?(todo.requiredStages?.[position]||1)
+    :Math.min(maxStage,Math.max(1,reviewStart+1));
+  const stageComplete=(progress[index]||0)>=required;
   const needsReview=Array.isArray(todo.reviewIndices)&&todo.reviewIndices.map(Number).includes(+index)&&itemDetailV32(item,index).reviewRequested;
   return stageComplete&&!needsReview;
 }
 function todoIsCompleteV31(todo,progress,item){
   if(todo.adjustment)return false;
+  if(todo.phase==="review"&&todo.reviewSelectionCreated!==true&&todo.reviewBuilder===true)return false;
   return todo.indices.every((index,position)=>todoItemIsCompleteV32(todo,index,position,progress,item));
 }
 
@@ -4086,17 +4343,11 @@ function changeTodoStageV31(materialId,itemIndex,stage){
   renderMaterialEditList();
 }
 
-function renderTodoCardV31(todo,item){
-  const progress=materialProgressV31(item);
+function renderTodoRowsV35(todo,item,progress=materialProgressV31(item)){
   const labels=progressStageLabels(item);
-  const complete=todoIsCompleteV31(todo,progress,item);
-  const required=todo.requiredStages||[];
-  const unfinished=todo.indices.filter((index,position)=>!todoItemIsCompleteV32(todo,index,position,progress,item)).length;
-  const finish=formatProgressFinishDate(item);
-  const legend=labels.map((label,index)=>`<span><i>${index+1}</i>${esc(label)}</span>`).join("")+`<span><i>↻</i>復習日にもう一度</span><span><i>✎</i>メモ</span>`;
   const carryover=new Set(Array.isArray(todo.carryoverIndices)?todo.carryoverIndices.map(Number):[]);
   const scheduledReview=new Set(Array.isArray(todo.reviewIndices)?todo.reviewIndices.map(Number):[]);
-  const rows=todo.indices.map(index=>{
+  return (todo.indices||[]).map(index=>{
     const current=Math.max(0,Math.min(labels.length,+progress[index]||0));
     const displayNumber=materialDisplayNumberV32(item,index);
     const itemText=item.showSerialNumber?`${item.unit} ${displayNumber}`:`${displayNumber}${item.unit}`;
@@ -4110,7 +4361,7 @@ function renderTodoCardV31(todo,item){
     const reviewTitle=detail.reviewRequested?(todo.phase==="review"&&scheduledReview.has(index)?"復習済みにする":"復習指定を解除する"):"復習日にもう一度";
     return `<div class="todo-v31-item">
       <div class="todo-v31-row">
-        <div class="todo-v31-number"><strong>${item.showSerialNumber?`${esc(item.unit)} ${displayNumber}`:displayNumber}</strong>${item.showSerialNumber?"":`<small>${esc(item.unit)}</small>`}${carryover.has(index)?'<span class="todo-v31-carryover">積み残し</span>':""}${scheduledReview.has(index)?'<span class="todo-v31-carryover">復習指定</span>':""}</div>
+        <div class="todo-v31-number"><strong>${item.showSerialNumber?`${esc(item.unit)} ${displayNumber}`:displayNumber}</strong>${item.showSerialNumber?"":`<small>${esc(item.unit)}</small>`}${carryover.has(index)?'<span class="todo-v31-carryover">積み残し</span>':""}</div>
         <div class="todo-stage-checks">${checks}</div>
         <div class="todo-v31-tools">
           <button class="todo-v31-tool review ${detail.reviewRequested?"active":""}" type="button" title="${reviewTitle}" aria-label="${esc(itemText)} ${reviewTitle}" onclick="toggleReviewRequestV32('${item.id}',${index})">↻</button>
@@ -4121,6 +4372,115 @@ function renderTodoCardV31(todo,item){
       <div class="todo-v31-memo-editor" id="todoMemoEditor-${item.id}-${index}"><input id="todoMemoInput-${item.id}-${index}" maxlength="200" value="${esc(detail.note)}" placeholder="例：小問（2）（4）、符号に注意" onkeydown="if(event.key==='Enter'){event.preventDefault();saveTodoMemoV32('${item.id}',${index})}"><button type="button" onclick="saveTodoMemoV32('${item.id}',${index})">保存</button></div>
     </div>`;
   }).join("");
+}
+
+function futureDateLabelV35(date){
+  const weekdays=["日","月","火","水","木","金","土"];
+  return `${date.getMonth()+1}月${date.getDate()}日（${weekdays[date.getDay()]}）`;
+}
+function futureModeForMaterialV35(item){
+  return futureTodoModeV35.get(item.id)||(["keep","advance"].includes(item.aheadPolicy)?item.aheadPolicy:"");
+}
+function toggleFutureTodosV35(materialId){
+  const current=futureTodoDaysV35.get(materialId)||0;
+  if(current){futureTodoDaysV35.delete(materialId);renderTodayTodos();return}
+  futureTodoDaysV35.set(materialId,1);
+  const item=loadMaterials().find(material=>material.id===materialId);
+  if(item){
+    if(["keep","advance"].includes(item.aheadPolicy))futureTodoModeV35.set(materialId,item.aheadPolicy);
+    else{
+      const today=localDateKey();
+      const savedMode=loadSharedTodos().find(todo=>todo.materialId===materialId&&todo.date>today&&todo.futurePreview&&["keep","advance"].includes(todo.aheadMode))?.aheadMode;
+      if(savedMode)futureTodoModeV35.set(materialId,savedMode);
+    }
+  }
+  renderTodayTodos();
+}
+function selectFutureModeV35(materialId,mode){
+  mode=mode==="advance"?"advance":"keep";
+  futureTodoModeV35.set(materialId,mode);
+  const today=localDateKey();
+  const todos=loadSharedTodos();
+  let changed=false;
+  todos.forEach(todo=>{
+    if(todo.materialId===materialId&&todo.date>today&&todo.futurePreview&&todo.aheadMode!==mode){todo.aheadMode=mode;changed=true}
+  });
+  if(changed)saveSharedTodos(todos);
+  renderTodayTodos();
+}
+function showMoreFutureDayV35(materialId){
+  const count=futureTodoDaysV35.get(materialId)||1;
+  if(count>=14){toast("表示できるのは14日先までです");return}
+  futureTodoDaysV35.set(materialId,count+1);
+  renderTodayTodos();
+}
+function ensureFutureTodoRecordsV35(item,count,mode){
+  const today=new Date();today.setHours(0,0,0,0);
+  const todayKey=localDateKey(today);
+  const saved=loadSharedTodos();
+  const todayTodo=saved.find(todo=>todo.source==="MIERU_STUDY"&&todo.materialId===item.id&&todo.date===todayKey&&Array.isArray(todo.indices));
+  const excluded=new Set((todayTodo?.indices||[]).map(Number));
+  const records=[];
+  let changed=false;
+  for(let offset=1;offset<=count;offset++){
+    const dateObject=addDays(today,offset);
+    const date=localDateKey(dateObject);
+    let record=saved.find(todo=>todo.source==="MIERU_STUDY"&&todo.materialId===item.id&&todo.date===date);
+    if(!record){
+      const generated=buildTodayTodoForMaterialV31(item,dateObject,[...excluded]);
+      if(generated){
+        record={...generated,futurePreview:true,aheadMode:mode};
+        saved.push(record);
+        changed=true;
+      }
+    }else if(record.futurePreview&&(record.aheadMode!==mode)){
+      record.aheadMode=mode;
+      changed=true;
+    }
+    if(record&&Array.isArray(record.indices))record.indices.forEach(index=>excluded.add(+index));
+    records.push(record||{date,empty:true});
+  }
+  if(changed)saveSharedTodos(saved);
+  return records;
+}
+function renderFutureTodoSectionV35(item){
+  const shown=futureTodoDaysV35.get(item.id)||0;
+  if(!shown)return `<div class="future-todo-section"><button class="future-todo-toggle" type="button" onclick="toggleFutureTodosV35('${item.id}')">明日以降のTODOを見る</button></div>`;
+  const mode=futureModeForMaterialV35(item);
+  const modeButtons=`<div class="future-mode-heading">先取りした分の扱い</div><div class="future-mode-options">
+    <button class="future-mode-button ${mode==="keep"?"active":""}" type="button" onclick="selectFutureModeV35('${item.id}','keep')">予定日を残す</button>
+    <button class="future-mode-button ${mode==="advance"?"active":""}" type="button" onclick="selectFutureModeV35('${item.id}','advance')">以降の予定を前倒しする</button>
+  </div>`;
+  let content='<div class="future-mode-help">先取り分は今日の達成率には含まれません。</div>';
+  if(!mode){
+    content+='<div class="future-day-note">先取りした分の扱いを選ぶと、明日以降の予定を表示します。</div>';
+  }else{
+    const progress=materialProgressV31(item);
+    content+=ensureFutureTodoRecordsV35(item,shown,mode).map(record=>{
+      const dateObject=parseLocalDate(record.date);
+      if(record.empty)return `<div class="future-day-card"><div class="future-day-head"><strong>${futureDateLabelV35(dateObject)}</strong><span>予定なし</span></div><div class="future-day-note">この教材の予定はありません。</div></div>`;
+      if(record.adjustment)return `<div class="future-day-card"><div class="future-day-head"><strong>${futureDateLabelV35(dateObject)}</strong><span>調整日</span></div><div class="future-day-note">遅れの回収、追加復習、先取りなどに自由に使えます。</div></div>`;
+      if(record.phase==="review"&&record.reviewBuilder===true&&!record.reviewSelectionCreated)return `<div class="future-day-card"><div class="future-day-head"><strong>${futureDateLabelV35(dateObject)}</strong><span>復習日</span></div><div class="future-day-note">復習する問題は、その日のTODO画面で選択して作成します。</div></div>`;
+      const complete=todoIsCompleteV31(record,progress,item);
+      return `<div class="future-day-card"><div class="future-day-head"><strong>${futureDateLabelV35(dateObject)}</strong><span>${complete?"完了":todoPhaseLabelV31(item,record)}</span></div><div class="todo-v31-items">${renderTodoRowsV35(record,item,progress)}</div></div>`;
+    }).join("");
+    content+=`<button class="future-more-button" type="button" onclick="showMoreFutureDayV35('${item.id}')">さらに次の日を見る</button>`;
+  }
+  return `<div class="future-todo-section"><button class="future-todo-toggle" type="button" onclick="toggleFutureTodosV35('${item.id}')">明日以降のTODOを閉じる</button><div class="future-todo-panel">${modeButtons}${content}</div></div>`;
+}
+
+function renderTodoCardV31(todo,item){
+  const progress=materialProgressV31(item);
+  const labels=progressStageLabels(item);
+  const pendingReview=todo.phase==="review"&&todo.reviewBuilder===true&&todo.reviewSelectionCreated!==true;
+  const complete=!pendingReview&&todoIsCompleteV31(todo,progress,item);
+  const unfinished=(todo.indices||[]).filter((index,position)=>!todoItemIsCompleteV32(todo,index,position,progress,item)).length;
+  const finish=formatProgressFinishDate(item);
+  const legend=labels.map((label,index)=>`<span><i>${index+1}</i>${esc(label)}</span>`).join("")+`<span><i>↻</i>復習日にもう一度</span><span><i>✎</i>メモ</span>`;
+  const rows=renderTodoRowsV35(todo,item,progress);
+  const reviewControls=pendingReview
+    ?renderReviewSelectorV35(item,todo,false)
+    :(todo.phase==="review"?`<details class="review-add-details"><summary>＋ 復習する問題を追加</summary>${renderReviewSelectorV35(item,todo,true)}</details>`:"");
 
   return `<div class="todo-group todo-v31 ${complete?"completed":""}">
     <div class="todo-head">
@@ -4133,10 +4493,12 @@ function renderTodoCardV31(todo,item){
           <span>終了予定日 ${esc(finish)}</span>
         </div>
       </div>
-      <div class="todo-v31-status">${complete?"完了":`あと${unfinished}項目`}</div>
+      <div class="todo-v31-status">${pendingReview?"内容を選択":complete?"完了":`あと${unfinished}項目`}</div>
     </div>
     <div class="todo-stage-legend">${legend}</div>
-    <div class="todo-v31-items">${rows}</div>
+    ${rows?`<div class="todo-v31-items">${rows}</div>`:""}
+    ${reviewControls}
+    ${renderFutureTodoSectionV35(item)}
   </div>`;
 }
 
@@ -4169,6 +4531,7 @@ function renderTodayTodos(){
 
   const actionable=todos.filter(todo=>!todo.adjustment);
   const remaining=actionable.filter(todo=>!todo.completed);
+  const pendingReview=remaining.filter(todo=>todo.phase==="review"&&todo.reviewBuilder===true&&todo.reviewSelectionCreated!==true);
   const totalUnits=actionable.reduce((sum,todo)=>sum+(todo.indices?.length||0),0);
   const remainingUnits=remaining.reduce((sum,todo)=>sum+todo.indices.filter((index,position)=>{
     const item=materialMap.get(todo.materialId);
@@ -4185,10 +4548,14 @@ function renderTodayTodos(){
   }
 
   if(countLabel)countLabel.textContent=`${remaining.length}件`;
-  if(headline)headline.textContent=remaining.length?`あと${remainingUnits}項目`:"今日の予定は完了";
+  if(headline)headline.textContent=pendingReview.length&&remainingUnits===0?"復習TODOを作成してください":remaining.length?`あと${remainingUnits}項目`:"今日の予定は完了";
   if(summary){
-    if(remaining.length){
-      summary.textContent=remaining.map(todo=>`${todo.subject} ${todoRangeSummaryV32(todo,materialMap.get(todo.materialId))}`).join("・");
+    if(pendingReview.length&&remainingUnits===0){
+      summary.textContent=pendingReview.map(todo=>`${todo.subject} 復習する問題を選択`).join("・");
+    }else if(remaining.length){
+      summary.textContent=remaining.map(todo=>todo.phase==="review"&&todo.reviewBuilder===true&&todo.reviewSelectionCreated!==true
+        ?`${todo.subject} 復習する問題を選択`
+        :`${todo.subject} ${todoRangeSummaryV32(todo,materialMap.get(todo.materialId))}`).join("・");
     }else if(todos.some(todo=>todo.adjustment)){
       summary.textContent="調整日です。自由に学習を調整できます";
     }else{
@@ -4206,7 +4573,7 @@ function renderTodayTodos(){
     const item=materialMap.get(todo.materialId);
     if(!item)return "";
     if(todo.adjustment){
-      return `<div class="todo-group"><div class="todo-head"><h3>${esc(item.title)}</h3><p>${esc(item.subject)}・調整日</p></div><div class="todo-adjustment">今日は調整日です。遅れの回収、追加復習、先取りなどに自由に使えます。</div></div>`;
+      return `<div class="todo-group"><div class="todo-head"><h3>${esc(item.title)}</h3><p>${esc(item.subject)}・調整日</p></div><div class="todo-adjustment">今日は調整日です。遅れの回収、追加復習、先取りなどに自由に使えます。</div>${renderFutureTodoSectionV35(item)}</div>`;
     }
     return renderTodoCardV31(todo,item);
   }).join("");
