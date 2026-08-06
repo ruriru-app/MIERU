@@ -478,16 +478,20 @@ input[type=checkbox]:disabled{opacity:.35}
   font-weight:700;
   white-space:nowrap;
 }
-.register-actions{display:grid;gap:10px}
-.register-save-actions{display:grid;grid-template-columns:1fr 1.25fr;gap:10px}
-.register-save-actions .primary{margin-top:0;min-height:48px}
+.register-actions{
+  display:grid;
+  grid-template-columns:minmax(0,.85fr) minmax(0,1fr) minmax(0,1.4fr);
+  gap:8px;
+  align-items:stretch;
+}
+.register-actions > button{min-width:0;min-height:48px;margin-top:0;padding:10px 8px;line-height:1.35}
 .register-progress-button{background:#6f9fbd}
-.register-cancel-button{width:100%;min-height:44px}
+.register-cancel-button{width:100%}
 .serial-number-settings{
   display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(110px,.7fr);
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
   gap:10px;
-  align-items:end;
+  align-items:stretch;
   margin-top:10px;
 }
 .serial-number-toggle{
@@ -503,8 +507,22 @@ input[type=checkbox]:disabled{opacity:.35}
   font-weight:700;
 }
 .serial-number-toggle input{width:20px;height:20px;margin:0}
-#startNumberField{display:none;margin-bottom:0}
-#startNumberField.active{display:block}
+#startNumberField{
+  display:grid;
+  grid-template-columns:auto minmax(70px,1fr);
+  gap:8px;
+  align-items:center;
+  min-height:48px;
+  margin-bottom:0;
+  padding:7px 10px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:#faf9f7;
+  opacity:.5;
+}
+#startNumberField.active{opacity:1}
+#startNumberField label{margin:0;font-size:12px;white-space:nowrap}
+#startNumberField input{min-width:0;padding:8px}
 .serial-number-note{
   margin:6px 2px 0;
   color:var(--muted);
@@ -512,6 +530,15 @@ input[type=checkbox]:disabled{opacity:.35}
   line-height:1.55;
 }
 .work-start-note{margin-top:6px;color:var(--muted);font-size:10px;line-height:1.55}
+.material-core-grid{
+  display:grid;
+  grid-template-columns:minmax(92px,.75fr) minmax(145px,1.25fr) minmax(72px,.7fr) minmax(170px,1.35fr);
+  gap:10px;
+  align-items:end;
+}
+.material-core-grid .field{display:flex;min-width:0;flex-direction:column}
+.material-core-grid label{display:flex;align-items:flex-end;min-height:32px;line-height:1.35}
+.material-core-grid input,.material-core-grid select{min-width:0;padding-inline:10px}
 .material-data-management{
   display:none;
   margin-top:16px;
@@ -538,8 +565,17 @@ input[type=checkbox]:disabled{opacity:.35}
   .subject-tone-row{grid-template-columns:1fr 112px}
   .week-allocation{gap:4px}
   .week-box input{font-size:13px}
-  .serial-number-settings{grid-template-columns:1fr}
-  .register-save-actions{grid-template-columns:1fr}
+  .register-actions{grid-template-columns:minmax(0,.82fr) minmax(0,1fr) minmax(0,1.38fr);gap:5px}
+  .register-actions > button{padding:8px 4px;font-size:10px}
+  .serial-number-settings{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:6px}
+  .serial-number-toggle{gap:6px;padding:8px 7px;font-size:10px}
+  .serial-number-toggle input{width:18px;height:18px}
+  #startNumberField{grid-template-columns:auto minmax(48px,1fr);gap:5px;padding:6px 7px}
+  #startNumberField label{font-size:9px;white-space:normal;line-height:1.3}
+  #startNumberField input{padding:7px 5px;font-size:11px}
+  .material-core-grid{grid-template-columns:minmax(62px,.72fr) minmax(100px,1.2fr) minmax(55px,.62fr) minmax(120px,1.38fr);gap:5px}
+  .material-core-grid label{min-height:38px;font-size:9px}
+  .material-core-grid input,.material-core-grid select{padding-inline:5px;font-size:11px}
 }
 
 
@@ -590,7 +626,7 @@ input[type=checkbox]:disabled{opacity:.35}
 .material-edit-list{display:grid;gap:10px}
 .material-edit-item{
   display:grid;
-  grid-template-columns:1fr auto;
+  grid-template-columns:auto minmax(0,1fr) auto;
   gap:10px;
   align-items:center;
   padding:12px 13px;
@@ -598,6 +634,19 @@ input[type=checkbox]:disabled{opacity:.35}
   border-radius:14px;
   background:#fff;
 }
+.material-order-controls{display:grid;grid-template-columns:repeat(2,32px);gap:5px}
+.material-order-button{
+  width:32px;
+  height:34px;
+  padding:0;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:#faf9f7;
+  color:#6e6862;
+  font-size:15px;
+  font-weight:800;
+}
+.material-order-button:disabled{opacity:.28}
 .material-edit-title{font-size:14px;font-weight:700;line-height:1.45}
 .material-edit-meta{margin-top:3px;font-size:11px;color:var(--muted)}
 .material-edit-button{
@@ -1654,17 +1703,16 @@ nav button.active{color:var(--accent);font-weight:700}
     </div>
     <div class="field"><label>教材名</label><input id="materialTitle" value="" placeholder="教材名を入力" oninput="updateSpinePreview()"></div>
     <div class="field"><label>出版社</label><input id="materialPublisher" value="" placeholder="出版社名（任意）"></div>
-    <div class="inline">
-      <div class="field"><label>用紙サイズ</label><select id="paperSize"><option value="">選択してください</option><option>A4</option><option>B5</option><option>A5</option></select></div>
-      <div class="field"><label>管理単位</label><input id="materialUnit" maxlength="20" value="" placeholder="例：問、ページ、プリント、Lesson" oninput="recalculatePlan()"></div>
-    </div>
-    <div class="inline">
+    <div class="material-core-grid">
+      <div class="field"><label>用紙サイズ</label><select id="paperSize"><option value="A4" selected>A4</option><option value="B5">B5</option><option value="A5">A5</option></select></div>
+      <div class="field"><label>管理単位</label><input id="materialUnit" maxlength="20" value="" placeholder="例：問、ページ、プリント、Lesson、Day" oninput="recalculatePlan()"></div>
       <div class="field"><label>総数</label><input id="materialTotal" type="number" min="1" value="" placeholder="例：364" oninput="syncWorkStartBounds();recalculatePlan()"></div>
-      <div class="field"><label>この教材のどこから取り組みますか？</label><input id="materialWorkStart" type="number" min="1" value="1" placeholder="例：71" oninput="recalculatePlan()"><div class="work-start-note" id="workStartNote">新しく始める教材は「1」のままで構いません。</div></div>
+      <div class="field"><label for="materialWorkStart">この教材のどこから取り組みますか？</label><input id="materialWorkStart" type="number" min="1" value="1" placeholder="例：71" oninput="recalculatePlan()"></div>
     </div>
+    <div class="work-start-note" id="workStartNote">新しく始める教材は「1」のままで構いません。</div>
     <div class="serial-number-settings">
-      <label class="serial-number-toggle"><input id="showSerialNumber" type="checkbox" onchange="syncSerialNumberUI()">通番を表示する</label>
-      <div class="field" id="startNumberField"><label>教材の最初の通番</label><input id="startNumber" type="number" min="1" value="1" disabled oninput="syncWorkStartBounds();recalculatePlan()"></div>
+      <label class="serial-number-toggle"><input id="showSerialNumber" type="checkbox" onchange="syncSerialNumberUI()">TODOに通番で表示する</label>
+      <div id="startNumberField"><label for="startNumber">教材の最初の番号</label><input id="startNumber" type="number" min="1" value="1" disabled oninput="syncWorkStartBounds();recalculatePlan()"></div>
     </div>
     <div class="serial-number-note">教材自体が「51、52…」のように途中の通番から始まる場合だけONにします。通常はOFFのままで構いません。</div>
     <div class="date-fields" style="margin-top:14px">
@@ -1796,13 +1844,6 @@ nav button.active{color:var(--accent);font-weight:700}
     </div>
 
   </div>
-  <div class="register-actions">
-    <div class="register-save-actions">
-      <button class="primary" id="registerSubmitButton" type="button" onclick="registerMaterial(false)">この内容で登録する</button>
-      <button class="primary register-progress-button" id="registerProgressButton" type="button" onclick="registerMaterial(true)">登録して進捗の詳細入力へ</button>
-    </div>
-    <button class="secondary-btn register-cancel-button" type="button" onclick="leaveRegistration()"><span class="registerBackLabel">登録せず戻る</span></button>
-  </div>
   <div class="material-data-management" id="materialDataManagement">
     <h3>教材データ管理</h3>
     <p>教材設定を残したまま進捗を初期化できます。教材の削除は設定・進捗・TODO履歴・保存画像をすべて削除します。</p>
@@ -1810,6 +1851,11 @@ nav button.active{color:var(--accent);font-weight:700}
       <button class="material-data-button" type="button" onclick="resetEditingMaterialProgress()">進捗をリセット</button>
       <button class="material-data-button danger" type="button" onclick="deleteEditingMaterial()">教材を削除</button>
     </div>
+  </div>
+  <div class="register-actions">
+    <button class="secondary-btn register-cancel-button" type="button" onclick="leaveRegistration()"><span class="registerBackLabel">登録せず戻る</span></button>
+    <button class="primary" id="registerSubmitButton" type="button" onclick="registerMaterial(false)">この内容で登録する</button>
+    <button class="primary register-progress-button" id="registerProgressButton" type="button" onclick="registerMaterial(true)">登録して進捗の詳細入力へ</button>
   </div>
 </section>
 
@@ -1876,7 +1922,7 @@ nav button.active{color:var(--accent);font-weight:700}
 
   <div class="settings-card settings-section">
     <h3>登録済み教材の編集と計画変更</h3>
-    <p class="settings-note">教材名・残り数・終了目標日・計画方法などを変更できます。</p>
+    <p class="settings-note">教材名・残り数・終了目標日・計画方法などを変更できます。↑↓で変えた順番はホームの本箱にも反映されます。</p>
     <div class="material-edit-list" id="materialEditList"></div>
   </div>
 
@@ -2193,7 +2239,8 @@ updatePreview();
 
 function appSettings(){ go("settings"); syncBookboxSettingsV20(); renderMaterialEditList(); }
 function sortBooks(){
-  toast("本の並べ替えは今後実装します");
+  appSettings();
+  requestAnimationFrame(()=>document.getElementById("materialEditList")?.scrollIntoView({behavior:"smooth",block:"center"}));
 }
 
 const BOOKBOX_COLOR_KEY="mieruStudyBookboxColor";
@@ -2512,6 +2559,7 @@ function clearRegistrationForm(){
   ["materialSubject","materialTitle","materialPublisher","paperSize","materialUnit","materialTotal","targetDate","dailyAmount","newDays","reviewDays","bufferEvery","bufferDays","dailyNewAmount"].forEach(id=>{
     const field=document.getElementById(id);if(field)field.value="";
   });
+  document.getElementById("paperSize").value="A4";
   document.getElementById("materialWorkStart").value="1";
   document.getElementById("materialWorkStart").disabled=false;
   document.getElementById("startDate").value=todayISO();
@@ -3121,8 +3169,12 @@ function renderMaterialEditList(){
     host.innerHTML='<div class="material-edit-empty">登録済み教材はありません。</div>';
     return;
   }
-  host.innerHTML=items.map(item=>`
+  host.innerHTML=items.map((item,index)=>`
     <div class="material-edit-item">
+      <div class="material-order-controls" aria-label="${esc(item.title)}の並び順">
+        <button class="material-order-button" type="button" aria-label="${esc(item.title)}を上へ" onclick="moveMaterialOrder('${item.id}',-1)" ${index===0?"disabled":""}>↑</button>
+        <button class="material-order-button" type="button" aria-label="${esc(item.title)}を下へ" onclick="moveMaterialOrder('${item.id}',1)" ${index===items.length-1?"disabled":""}>↓</button>
+      </div>
       <div>
         <div class="material-edit-title">${esc(item.title)}</div>
         <div class="material-edit-meta">${esc(item.subject)}・残り${item.remaining}${esc(item.unit)}・${planName(item.planMode)}</div>
@@ -3130,6 +3182,20 @@ function renderMaterialEditList(){
       <button class="material-edit-button" type="button" onclick="startEditMaterial('${item.id}')">編集</button>
     </div>
   `).join("");
+}
+function moveMaterialOrder(id,direction){
+  const items=loadMaterials();
+  const activeIds=items.filter(item=>!item.completed).map(item=>item.id);
+  const activeIndex=activeIds.indexOf(id);
+  const targetActiveIndex=activeIndex+(direction<0?-1:1);
+  if(activeIndex<0||targetActiveIndex<0||targetActiveIndex>=activeIds.length)return;
+  const currentIndex=items.findIndex(item=>item.id===id);
+  const targetIndex=items.findIndex(item=>item.id===activeIds[targetActiveIndex]);
+  [items[currentIndex],items[targetIndex]]=[items[targetIndex],items[currentIndex]];
+  if(!saveMaterials(items)){toast("並び順を保存できませんでした");return}
+  renderRegisteredMaterials();
+  renderMaterialEditList();
+  toast("本箱の並び順を更新しました");
 }
 function startEditMaterial(id){
   const item=loadMaterials().find(x=>x.id===id);
@@ -3147,7 +3213,7 @@ function startEditMaterial(id){
   document.getElementById("materialSubject").value=item.subject||"";
   document.getElementById("materialTitle").value=item.title||"";
   document.getElementById("materialPublisher").value=item.publisher||"";
-  document.getElementById("paperSize").value=item.paperSize||"";
+  document.getElementById("paperSize").value=item.paperSize||"A4";
   document.getElementById("materialUnit").value=item.unit||"";
   document.getElementById("materialTotal").value=item.total||"";
   document.getElementById("showSerialNumber").checked=item.showSerialNumber===true;
